@@ -1,0 +1,107 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html, body, #root {
+    @apply h-screen overflow-hidden;
+    margin: 0;
+    padding: 0;
+  }
+  body {
+    @apply bg-zinc-950 text-zinc-100 antialiased transition-colors duration-300;
+  }
+  .light body {
+    @apply bg-slate-100 text-slate-800;
+  }
+}
+
+/* Glassmorphism effects (Zinc/shadcn styled) */
+.glass-panel {
+  background: rgba(9, 9, 11, 0.85); /* zinc-950 background */
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.05); /* very subtle border */
+}
+
+.light .glass-panel {
+  background: rgba(248, 250, 252, 0.85); /* Ghost White (#F8FAFC) */
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(30, 41, 59, 0.06); /* subtle border */
+  box-shadow: 0 4px 20px -2px rgba(148, 163, 184, 0.12); /* cool slate shadow */
+}
+
+.glass-card {
+  background: rgba(12, 12, 15, 0.7); /* zinc-900 custom surface */
+  backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.light .glass-card {
+  background: rgba(248, 250, 252, 0.7);
+  backdrop-filter: blur(16px);
+  border: 1px solid rgba(30, 41, 59, 0.06);
+  box-shadow: 0 4px 20px -2px rgba(148, 163, 184, 0.1);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.glass-card:hover {
+  border-color: rgba(34, 197, 94, 0.3);
+  transform: translateY(-2px);
+}
+
+.light .glass-card:hover {
+  border-color: rgba(2, 132, 199, 0.3); /* Cerulean Blue hover */
+  box-shadow: 0 10px 30px -5px rgba(2, 132, 199, 0.15);
+  transform: translateY(-2px);
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(9, 9, 11, 0.5);
+}
+
+::-webkit-scrollbar-thumb {
+  background: #27272a; /* zinc-800 */
+  border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #22c55e;
+}
+
+/* Leaflet map dark mode overrides */
+.leaflet-container {
+  width: 100%;
+  height: 100%;
+  border-radius: 0.75rem;
+  z-index: 10;
+}
+
+.dark .leaflet-popup-content-wrapper {
+  background-color: #09090b !important; /* zinc-950 */
+  color: #fafafa !important;
+  border: 1px solid #27272a;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5);
+}
+
+.dark .leaflet-popup-tip {
+  background-color: #09090b !important;
+}
+
+/* Glow gradient animations */
+@keyframes pulseGlow {
+  0%, 100% { opacity: 0.3; }
+  50% { opacity: 0.6; }
+}
+
+.animate-pulse-glow {
+  animation: pulseGlow 4s infinite ease-in-out;
+}
