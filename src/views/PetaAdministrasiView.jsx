@@ -126,8 +126,15 @@ export default function PetaAdministrasiView() {
         {/* Leaflet Map Column (2 Cols) */}
         <div className="lg:col-span-2 relative h-[500px] rounded-2xl overflow-hidden border border-slate-200 dark:border-slate-800 shadow-2xl">
           <MapContainer 
-            center={hstCenter} 
+            center={[-2.58, 115.42]} 
             zoom={10} 
+            minZoom={10}
+            maxZoom={15}
+            maxBounds={[
+              [-2.90, 115.00],
+              [-2.30, 115.90]
+            ]}
+            maxBoundsViscosity={1.0}
             scrollWheelZoom={true}
             style={{ width: '100%', height: '100%' }}
             attributionControl={false}

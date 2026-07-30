@@ -125,6 +125,7 @@ const createKecLabelIcon = (name, isSelected) => {
 export default function HomeView({ onNavigate, onOpenAiCopilot, darkMode }) {
   const [selectedKecId, setSelectedKecId] = React.useState(1);
   const [apbdTab, setApbdTab] = React.useState('apbd');
+  const [showInflasiModal, setShowInflasiModal] = React.useState(false);
 
   const fmt = (n) => n.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
 
@@ -433,8 +434,15 @@ export default function HomeView({ onNavigate, onOpenAiCopilot, darkMode }) {
             {/* Leaflet Map (Matching Reference Image Style with Clear Boundaries & Labels) */}
             <div className="flex-1 rounded-lg overflow-hidden border border-slate-300 dark:border-slate-800 shadow-inner min-h-0 relative">
               <MapContainer
-                center={hstCenter}
+                center={[-2.58, 115.42]}
                 zoom={10}
+                minZoom={10}
+                maxZoom={15}
+                maxBounds={[
+                  [-2.90, 115.00],
+                  [-2.30, 115.90]
+                ]}
+                maxBoundsViscosity={1.0}
                 scrollWheelZoom={false}
                 zoomControl={true}
                 style={{ height: '100%', width: '100%' }}
@@ -525,32 +533,86 @@ export default function HomeView({ onNavigate, onOpenAiCopilot, darkMode }) {
 
         {/* RIGHT COLUMN (3 cols): Inflasi & Harga Pangan */}
         <div className="col-span-3 flex flex-col gap-2 min-h-0">
-          {/* Inflasi */}
-          <div className="flex-1 dashboard-card rounded-xl overflow-hidden flex flex-col min-h-0">
-            <div className="flex-shrink-0 bg-gradient-to-r from-blue-900 to-blue-800 px-3 py-1.5 flex items-center justify-between">
+          {/* Inflasi - Concise Informative Summary (Opens BPS Infographic Modal on Click) */}
+          <div 
+            onClick={() => setShowInflasiModal(true)}
+            className="flex-1 dashboard-card rounded-xl overflow-hidden flex flex-col min-h-0 cursor-pointer group hover:border-emerald-500/50 transition duration-200"
+          >
+            <div className="flex-shrink-0 bg-gradient-to-r from-teal-900 via-emerald-900 to-teal-800 px-3 py-1.5 flex items-center justify-between">
               <h3 className="text-[10px] font-bold text-white flex items-center gap-1.5">
-                <TrendingUp className="w-3 h-3" /> INFLASI KAB. (y-on-y)
+                <TrendingUp className="w-3.5 h-3.5 text-emerald-300" /> INFLASI HST ({inflasiData.bulan})
               </h3>
+              <span className="text-[7px] font-extrabold px-1.5 py-0.5 rounded-full bg-emerald-800/80 text-emerald-100 border border-emerald-500/40 group-hover:bg-emerald-700 transition flex items-center gap-0.5">
+                BPS <ChevronRight className="w-2.5 h-2.5" />
+              </span>
             </div>
-            <div className="flex-1 p-2 flex flex-col min-h-0">
-              <div className="flex items-baseline gap-2 mb-0.5">
-                <span className="text-xl font-extrabold text-slate-900 dark:text-white tracking-tight">
-                  {inflasiData.current.toFixed(2).replace('.', ',')}%
-                </span>
-                <span className="trend-badge bg-emerald-100 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-400">
-                  <ArrowDownRight className="w-2.5 h-2.5" /> {inflasiData.change.toFixed(2).replace('.', ',')}
-                </span>
+
+            <div className="flex-1 p-2 flex flex-col justify-between min-h-0 space-y-1.5">
+              {/* 3 Summary Pills: M-to-M, Y-to-D, Y-on-Y */}
+              <div className="grid grid-cols-3 gap-1 text-[8px] text-center">
+                <div className="p-1 rounded-lg bg-teal-50 dark:bg-teal-950/40 border border-teal-200 dark:border-teal-900/60">
+                  <span className="block text-[7px] text-teal-600 dark:text-teal-400 font-extrabold uppercase">M-to-M</span>
+                  <span className="text-xs font-black text-teal-700 dark:text-teal-300">0,03%</span>
+                </div>
+                <div className="p-1 rounded-lg bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-900/60">
+                  <span className="block text-[7px] text-emerald-600 dark:text-emerald-400 font-extrabold uppercase">Y-to-D</span>
+                  <span className="text-xs font-black text-emerald-700 dark:text-emerald-300">1,93%</span>
+                </div>
+                <div className="p-1 rounded-lg bg-blue-50 dark:bg-blue-950/40 border border-blue-200 dark:border-blue-900/60">
+                  <span className="block text-[7px] text-blue-600 dark:text-blue-400 font-extrabold uppercase">Y-on-Y</span>
+                  <span className="text-xs font-black text-blue-700 dark:text-blue-300">4,54%</span>
+                </div>
               </div>
-              <div className="flex-1 min-h-0">
-                <ResponsiveContainer width="100%" height="100%">
-                  <LineChart data={inflasiData.tren} margin={{ top: 5, right: 5, bottom: 0, left: -15 }}>
-                    <CartesianGrid strokeDasharray="3 3" stroke={darkMode ? "#334155" : "#e2e8f0"} opacity={0.5} />
-                    <XAxis dataKey="bulan" fontSize={8} stroke={darkMode ? "#94a3b8" : "#64748b"} tick={{ fontSize: 8 }} />
-                    <YAxis fontSize={8} stroke={darkMode ? "#94a3b8" : "#64748b"} domain={[2, 3]} tickFormatter={(v) => `${v.toFixed(1)}%`} tick={{ fontSize: 8 }} />
-                    <Tooltip contentStyle={{ backgroundColor: darkMode ? '#0f172a' : '#fff', borderRadius: '6px', fontSize: '10px' }} formatter={(v) => [`${v.toFixed(2)}%`, 'Inflasi']} />
-                    <Line type="monotone" dataKey="nilai" stroke="#3b82f6" strokeWidth={2} dot={{ r: 3, fill: '#3b82f6', stroke: '#fff' }} />
-                  </LineChart>
-                </ResponsiveContainer>
+
+              {/* Detailed Trend Line Chart with Month & Y-Axis Labels (Fills Card Space) */}
+              <div className="flex-1 w-full bg-slate-50 dark:bg-slate-900/50 p-1.5 rounded-lg border border-slate-200/50 dark:border-slate-800 flex flex-col min-h-[110px]">
+                <div className="flex items-center justify-between text-[8px] font-bold px-1 mb-1">
+                  <span className="text-slate-700 dark:text-slate-300">Tren Inflasi Y-on-Y (8 Bulan Terakhir)</span>
+                  <span className="text-emerald-600 dark:text-emerald-400 font-extrabold">Terbaru: 4,54%</span>
+                </div>
+                <div className="flex-1 w-full min-h-0">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <LineChart data={inflasiData.tren.slice(-8)} margin={{ top: 5, right: 8, bottom: 15, left: -22 }}>
+                      <CartesianGrid strokeDasharray="3 3" vertical={false} stroke={darkMode ? "#334155" : "#cbd5e1"} opacity={0.4} />
+                      <XAxis 
+                        dataKey="bulan" 
+                        fontSize={7} 
+                        stroke={darkMode ? "#94a3b8" : "#475569"} 
+                        tick={{ fontSize: 7, fill: darkMode ? '#94a3b8' : '#475569' }} 
+                        axisLine={false} 
+                        tickLine={false} 
+                      />
+                      <YAxis 
+                        fontSize={7} 
+                        stroke={darkMode ? "#94a3b8" : "#475569"} 
+                        domain={[0, 7]} 
+                        tickFormatter={(v) => `${v}%`} 
+                        tick={{ fontSize: 7, fill: darkMode ? '#94a3b8' : '#475569' }} 
+                        axisLine={false} 
+                        tickLine={false} 
+                      />
+                      <Tooltip 
+                        contentStyle={{ backgroundColor: darkMode ? '#0f172a' : '#fff', borderColor: darkMode ? '#334155' : '#cbd5e1', borderRadius: '6px', fontSize: '9px' }} 
+                        formatter={(v) => [`${v.toFixed(2)}%`, 'Inflasi Y-on-Y']} 
+                      />
+                      <Line 
+                        type="monotone" 
+                        dataKey="nilai" 
+                        stroke="#10b981" 
+                        strokeWidth={2.5} 
+                        dot={{ r: 3, fill: '#10b981', stroke: '#fff', strokeWidth: 1.5 }} 
+                        activeDot={{ r: 5 }}
+                      />
+                    </LineChart>
+                  </ResponsiveContainer>
+                </div>
+              </div>
+
+              {/* Click Trigger Footer */}
+              <div className="text-center pt-0.5 border-t border-slate-200 dark:border-slate-800">
+                <span className="text-[8px] font-extrabold text-emerald-600 dark:text-emerald-400 group-hover:underline flex items-center justify-center gap-0.5">
+                  Buka Berita Resmi BPS & Andil Kelompok <ChevronRight className="w-2.5 h-2.5" />
+                </span>
               </div>
             </div>
           </div>
@@ -619,6 +681,141 @@ export default function HomeView({ onNavigate, onOpenAiCopilot, darkMode }) {
           © 2025 Diskominfo SP HST — Dashboard Kepala Daerah Kabupaten Hulu Sungai Tengah
         </p>
       </div>
+
+      {/* ===== BPS INFLASI DETAIL MODAL (Matching Official Infographic) ===== */}
+      {showInflasiModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-md animate-fade-in">
+          <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-2xl max-w-3xl w-full max-h-[90vh] overflow-y-auto flex flex-col">
+            
+            {/* Modal Header */}
+            <div className="p-4 bg-gradient-to-r from-purple-900 via-indigo-900 to-teal-900 text-white rounded-t-2xl flex items-start justify-between relative overflow-hidden">
+              <div className="relative z-10">
+                <span className="text-[9px] font-black tracking-widest uppercase px-2 py-0.5 rounded-full bg-white/20 text-teal-200 border border-white/30">
+                  BERITA RESMI STATISTIK BPS
+                </span>
+                <h2 className="text-base font-black tracking-tight mt-1 text-white">
+                  PERKEMBANGAN INDEKS HARGA KONSUMEN (IHK) KABUPATEN HULU SUNGAI TENGAH JUNI 2026
+                </h2>
+                <p className="text-[11px] text-teal-200 mt-0.5">
+                  {inflasiData.noBrs}
+                </p>
+              </div>
+              <button 
+                onClick={() => setShowInflasiModal(false)}
+                className="relative z-10 p-1.5 rounded-full bg-white/10 hover:bg-white/20 text-white transition"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            {/* Modal Body */}
+            <div className="p-5 space-y-5 flex-1 overflow-y-auto">
+              
+              {/* 3 Main Inflasi Badges (M-to-M, Y-to-D, Y-on-Y) */}
+              <div className="grid grid-cols-3 gap-3">
+                {/* M-to-M */}
+                <div className="p-3 rounded-xl bg-teal-500/10 border border-teal-500/30 text-center">
+                  <span className="text-[10px] font-extrabold text-teal-600 dark:text-teal-400 block tracking-wider uppercase">Month-to-Month (M-to-M)</span>
+                  <div className="flex items-center justify-center gap-1 mt-1">
+                    <span className="text-xs font-bold text-teal-600 dark:text-teal-400">INFLASI</span>
+                    <span className="text-2xl font-black text-teal-700 dark:text-teal-300">0,03%</span>
+                  </div>
+                </div>
+
+                {/* Y-to-D */}
+                <div className="p-3 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-center">
+                  <span className="text-[10px] font-extrabold text-emerald-600 dark:text-emerald-400 block tracking-wider uppercase">Year-to-Date (Y-to-D)</span>
+                  <div className="flex items-center justify-center gap-1 mt-1">
+                    <span className="text-xs font-bold text-emerald-600 dark:text-emerald-400">INFLASI</span>
+                    <span className="text-2xl font-black text-emerald-700 dark:text-emerald-300">1,93%</span>
+                  </div>
+                </div>
+
+                {/* Y-on-Y */}
+                <div className="p-3 rounded-xl bg-indigo-500/10 border border-indigo-500/30 text-center">
+                  <span className="text-[10px] font-extrabold text-indigo-600 dark:text-indigo-400 block tracking-wider uppercase">Year-on-Year (Y-on-Y)</span>
+                  <div className="flex items-center justify-center gap-1 mt-1">
+                    <span className="text-xs font-bold text-indigo-600 dark:text-indigo-400">INFLASI</span>
+                    <span className="text-2xl font-black text-indigo-700 dark:text-indigo-300">4,54%</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* SECTION 1: Andil Inflasi Y-on-Y Menurut Kelompok Pengeluaran */}
+              <div className="bg-slate-50 dark:bg-slate-800/40 p-4 rounded-xl border border-slate-200 dark:border-slate-800">
+                <h3 className="text-xs font-black text-slate-900 dark:text-white uppercase tracking-wider mb-3 text-center">
+                  Andil Inflasi Year-on-Year (Y-on-Y) Menurut Kelompok Pengeluaran
+                </h3>
+                
+                <div className="grid grid-cols-2 gap-2 text-[10px]">
+                  {inflasiData.kelompokPengeluaran.map((item, idx) => (
+                    <div key={idx} className="flex items-center justify-between p-2 rounded-lg bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800">
+                      <div className="flex items-center gap-2">
+                        <span className="text-sm">{item.icon}</span>
+                        <span className="font-semibold text-slate-700 dark:text-slate-300">{item.kelompok}</span>
+                      </div>
+                      <span className={`font-black text-xs px-2 py-0.5 rounded ${
+                        item.andil >= 1.0 ? 'bg-purple-100 text-purple-800 dark:bg-purple-950 dark:text-purple-300' :
+                        item.andil >= 0.2 ? 'bg-blue-100 text-blue-800 dark:bg-blue-950 dark:text-blue-300' :
+                        'bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-400'
+                      }`}>
+                        {item.andil === 0 ? '~0%' : `${item.andil.toFixed(2).replace('.', ',')}%`}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* SECTION 2: Tingkat Inflasi Y-on-Y (Juli 2024 - Juni 2026) Line Chart */}
+              <div className="bg-slate-50 dark:bg-slate-800/40 p-4 rounded-xl border border-slate-200 dark:border-slate-800">
+                <div className="flex items-center justify-between mb-2">
+                  <h3 className="text-xs font-black text-slate-900 dark:text-white uppercase tracking-wider">
+                    Tingkat Inflasi Y-on-Y Kab. Hulu Sungai Tengah (Juli 2024 – Juni 2026)
+                  </h3>
+                  <span className="text-[9px] font-bold text-slate-500">2022=100</span>
+                </div>
+                
+                <div className="h-[200px] w-full">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <LineChart data={inflasiData.tren} margin={{ top: 15, right: 15, bottom: 20, left: -10 }}>
+                      <CartesianGrid strokeDasharray="3 3" stroke={darkMode ? "#334155" : "#cbd5e1"} opacity={0.4} />
+                      <XAxis dataKey="bulan" fontSize={9} stroke={darkMode ? "#94a3b8" : "#475569"} angle={-25} textAnchor="end" />
+                      <YAxis domain={[-1, 8]} fontSize={9} stroke={darkMode ? "#94a3b8" : "#475569"} tickFormatter={(v) => `${v}%`} />
+                      <Tooltip 
+                        contentStyle={{ backgroundColor: darkMode ? '#0f172a' : '#fff', borderRadius: '8px', fontSize: '11px' }} 
+                        formatter={(v) => [`${v.toFixed(2)}%`, 'Inflasi Y-on-Y']} 
+                      />
+                      <Line 
+                        type="monotone" 
+                        dataKey="nilai" 
+                        stroke="#8b5cf6" 
+                        strokeWidth={3} 
+                        dot={{ r: 4, fill: '#06b6d4', stroke: '#fff', strokeWidth: 2 }} 
+                        activeDot={{ r: 6, fill: '#8b5cf6' }} 
+                      />
+                    </LineChart>
+                  </ResponsiveContainer>
+                </div>
+              </div>
+
+            </div>
+
+            {/* Modal Footer */}
+            <div className="p-3 bg-slate-100 dark:bg-slate-950/80 rounded-b-2xl border-t border-slate-200 dark:border-slate-800 flex items-center justify-between text-[10px]">
+              <span className="text-slate-500">
+                Sumber Resmi: Badan Pusat Statistik (BPS) Kabupaten Hulu Sungai Tengah
+              </span>
+              <button 
+                onClick={() => setShowInflasiModal(false)}
+                className="px-4 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-white font-bold transition"
+              >
+                Tutup Window
+              </button>
+            </div>
+
+          </div>
+        </div>
+      )}
 
     </div>
   );

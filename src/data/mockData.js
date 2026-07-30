@@ -619,19 +619,54 @@ export const hargaPanganData = [
   { komoditas: 'Cabai Merah (kg)', harga: 45000, perubahan: +1000, icon: '🌶️' },
 ];
 
-// Data Inflasi Kabupaten (y-on-y)
+// Data Inflasi Kabupaten Hulu Sungai Tengah (Resmi BPS Juni 2026)
 export const inflasiData = {
-  current: 2.23,
-  change: -0.18,
-  changePeriod: 'dibanding Maret 2025',
-  bulan: 'April 2025',
-  sumber: 'BPS Kab. HST',
+  mToM: 0.03,      // Month-to-Month (0,03%)
+  yToD: 1.93,      // Year-to-Date (1,93%)
+  yOnY: 4.54,      // Year-on-Year (4,54%)
+  current: 4.54,
+  change: -0.36,   // Dibanding Mei 2026 (4,90%)
+  bulan: 'Juni 2026',
+  noBrs: 'No. 09/07/6307/Th. III, 1 Juli 2026',
+  sumber: 'BPS Kab. Hulu Sungai Tengah',
+  kelompokPengeluaran: [
+    { kelompok: 'Makanan, Minuman & Tembakau', andil: 3.22, icon: '🍞' },
+    { kelompok: 'Perawatan Pribadi & Jasa Lainnya', andil: 0.50, icon: '✂️' },
+    { kelompok: 'Transportasi', andil: 0.27, icon: '✈️' },
+    { kelompok: 'Restoran / Makanan Jadi', andil: 0.20, icon: '🍔' },
+    { kelompok: 'Perlengkapan Rumah Tangga', andil: 0.10, icon: '🛋️' },
+    { kelompok: 'Perumahan, Air, Listrik, Bbm', andil: 0.09, icon: '🏠' },
+    { kelompok: 'Pakaian & Alas Kaki', andil: 0.07, icon: '👔' },
+    { kelompok: 'Pendidikan', andil: 0.06, icon: '🎓' },
+    { kelompok: 'Kesehatan', andil: 0.02, icon: '💊' },
+    { kelompok: 'Informasi & Jasa Keuangan', andil: 0.01, icon: '📱' },
+    { kelompok: 'Rekreasi & Olahraga', andil: 0.00, icon: '⚽' },
+  ],
   tren: [
-    { bulan: 'Des 2024', nilai: 2.71 },
-    { bulan: 'Jan 2025', nilai: 2.54 },
-    { bulan: 'Feb 2025', nilai: 2.48 },
-    { bulan: 'Mar 2025', nilai: 2.41 },
-    { bulan: 'Apr 2025', nilai: 2.23 },
+    { bulan: 'Jul 24', nilai: 1.21 },
+    { bulan: 'Agu 24', nilai: 0.72 },
+    { bulan: 'Sep 24', nilai: 1.97 },
+    { bulan: 'Okt 24', nilai: 2.40 },
+    { bulan: 'Nov 24', nilai: 2.46 },
+    { bulan: 'Des 24', nilai: 1.11 },
+    { bulan: 'Jan 25', nilai: -0.53 },
+    { bulan: 'Feb 25', nilai: 1.06 },
+    { bulan: 'Mar 25', nilai: 0.74 },
+    { bulan: 'Apr 25', nilai: 0.30 },
+    { bulan: 'Mei 25', nilai: -0.13 },
+    { bulan: 'Jun 25', nilai: 0.47 },
+    { bulan: 'Jul 25', nilai: 1.73 },
+    { bulan: 'Agu 25', nilai: 3.09 },
+    { bulan: 'Sep 25', nilai: 3.37 },
+    { bulan: 'Okt 25', nilai: 3.06 },
+    { bulan: 'Nov 25', nilai: 3.02 },
+    { bulan: 'Des 25', nilai: 3.93 },
+    { bulan: 'Jan 26', nilai: 4.91 },
+    { bulan: 'Feb 26', nilai: 6.63 },
+    { bulan: 'Mar 26', nilai: 4.52 },
+    { bulan: 'Apr 26', nilai: 3.82 },
+    { bulan: 'Mei 26', nilai: 4.90 },
+    { bulan: 'Jun 26', nilai: 4.54 },
   ]
 };
 
