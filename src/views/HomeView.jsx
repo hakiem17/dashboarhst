@@ -115,29 +115,40 @@ export default function HomeView({ onNavigate, onOpenAiCopilot, darkMode }) {
         {/* LEFT COLUMN (3 cols): APBD & Pengaduan */}
         <div className="col-span-3 flex flex-col gap-2 min-h-0">
           {/* APBD Realisasi */}
-          <div className="flex-1 dashboard-card rounded-xl overflow-hidden flex flex-col min-h-0">
-            <div className="flex-shrink-0 bg-gradient-to-r from-blue-900 to-blue-800 px-3 py-1.5">
+          <div
+            className="flex-1 dashboard-card rounded-xl overflow-hidden flex flex-col min-h-0 cursor-pointer group hover:border-blue-500/50 transition duration-200"
+            onClick={() => onNavigate('apbd-belanja')}
+          >
+            <div className="flex-shrink-0 bg-gradient-to-r from-blue-900 to-blue-800 px-3 py-1.5 flex items-center justify-between">
               <h3 className="text-[10px] font-bold text-white flex items-center gap-1.5">
                 <DollarSign className="w-3 h-3" /> REALISASI APBD 2025
               </h3>
+              <span className="text-[8px] font-bold px-1.5 py-0.5 rounded-full bg-blue-700/80 text-blue-100 border border-blue-500/50 group-hover:bg-blue-600 transition flex items-center gap-0.5">
+                Detail OPD <ChevronRight className="w-2.5 h-2.5" />
+              </span>
             </div>
             <div className="flex-1 flex flex-col items-center justify-center p-2.5 min-h-0">
-              <div className="w-[100px] h-[100px] rounded-full flex items-center justify-center relative flex-shrink-0"
+              <div className="w-[95px] h-[95px] rounded-full flex items-center justify-center relative flex-shrink-0"
                 style={{ background: `conic-gradient(#1d4ed8 0% ${realisasiApbd.persenRealisasi}%, ${darkMode ? '#334155' : '#e2e8f0'} ${realisasiApbd.persenRealisasi}% 100%)` }}>
-                <div className="w-[70px] h-[70px] rounded-full bg-white dark:bg-slate-900 flex flex-col items-center justify-center z-10">
+                <div className="w-[65px] h-[65px] rounded-full bg-white dark:bg-slate-900 flex flex-col items-center justify-center z-10 group-hover:scale-105 transition">
                   <span className="text-base font-extrabold text-blue-800 dark:text-blue-300">{realisasiApbd.persenRealisasi}%</span>
                   <span className="text-[7px] text-slate-500 dark:text-slate-400 font-semibold">Realisasi</span>
                 </div>
               </div>
-              <div className="w-full space-y-1 mt-2 text-[10px]">
-                <div className="flex items-center justify-between px-2 py-1 rounded bg-slate-50 dark:bg-slate-800/50">
+              <div className="w-full space-y-1 mt-1.5 text-[10px]">
+                <div className="flex items-center justify-between px-2 py-0.5 rounded bg-slate-50 dark:bg-slate-800/50">
                   <span className="text-slate-500">Anggaran:</span>
                   <span className="font-bold text-slate-800 dark:text-slate-200">{realisasiApbd.totalAnggaran}</span>
                 </div>
-                <div className="flex items-center justify-between px-2 py-1 rounded bg-blue-50 dark:bg-blue-950/40">
+                <div className="flex items-center justify-between px-2 py-0.5 rounded bg-blue-50 dark:bg-blue-950/40 border border-blue-200/50 dark:border-blue-900/40">
                   <span className="text-blue-600 dark:text-blue-300 font-semibold">Realisasi:</span>
                   <span className="font-extrabold text-blue-700 dark:text-blue-200">{realisasiApbd.realisasi}</span>
                 </div>
+              </div>
+              <div className="w-full text-center mt-1">
+                <span className="text-[8px] font-semibold text-blue-600 dark:text-blue-400 group-hover:underline flex items-center justify-center gap-0.5">
+                  Lihat Realisasi Perangkat Daerah <ChevronRight className="w-2.5 h-2.5" />
+                </span>
               </div>
             </div>
           </div>
