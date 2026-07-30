@@ -817,3 +817,75 @@ export const realisasiApbd = {
     modal: 'Rp 350,8 M'
   }
 };
+
+// Data Capaian 4 Misi Utama Bupati Kabupaten Hulu Sungai Tengah
+export const misiBupatiData = [
+  {
+    id: 1,
+    misiNo: "MISI 1",
+    judul: "Sosial, SDM & Berbudaya",
+    subJudul: "Masyarakat Adaptif, Berdaya Saing & Quality of Life",
+    tujuan: "Meningkatkan kehidupan sosial masyarakat yang adaptif, berdaya saing, religius & berbudaya.",
+    icon: "Users",
+    color: "from-blue-600 to-indigo-600",
+    borderColor: "border-blue-500/30",
+    badgeColor: "bg-blue-500/20 text-blue-300 border-blue-500/30",
+    stats: [
+      { label: "IPM HST", value: "72,85", status: "Tinggi", icon: "📈" },
+      { label: "Tingkat Kemiskinan", value: "4,68%", status: "Terendah Banua Enam", icon: "📉" },
+      { label: "Usia Harapan Hidup", value: "71,4 Thn", status: "Meningkat", icon: "❤️" },
+      { label: "Indeks iBangga", value: "62,4", status: "Baik", icon: "🏠" },
+    ]
+  },
+  {
+    id: 2,
+    misiNo: "MISI 2",
+    judul: "Ekonomi & Hilirisasi Pertanian",
+    subJudul: "Hilirisasi Pertanian & Pertumbuhan Berkesinambungan",
+    tujuan: "Meningkatkan perekonomian daerah yang berdaya saing dari hulu-hilir pertanian.",
+    icon: "TrendingUp",
+    color: "from-emerald-600 to-teal-600",
+    borderColor: "border-emerald-500/30",
+    badgeColor: "bg-emerald-500/20 text-emerald-300 border-emerald-500/30",
+    stats: [
+      { label: "Pertumbuhan Ekonomi", value: "4,82%", status: "Stabil", icon: "🚀" },
+      { label: "PDRB Pertanian", value: "+5,12%", status: "Sektor Utama", icon: "🌾" },
+      { label: "Laju Inflasi (y-on-y)", value: "4,54%", status: "Terkendali", icon: "📊" },
+      { label: "Nilai Investasi", value: "Rp 425 M", status: "+12.4%", icon: "💼" },
+    ]
+  },
+  {
+    id: 3,
+    misiNo: "MISI 3",
+    judul: "Infrastruktur & IKLH Lingkungan",
+    subJudul: "Infrastruktur Merata & Ketahanan Risiko Bencana",
+    tujuan: "Meningkatkan pelayanan infrastruktur merata, IKLH & ketahanan bencana daerah.",
+    icon: "Building2",
+    color: "from-amber-600 to-orange-600",
+    borderColor: "border-amber-500/30",
+    badgeColor: "bg-amber-500/20 text-amber-300 border-amber-500/30",
+    stats: [
+      { label: "Indeks Layanan Infrastruktur", value: "78,5", status: "Baik", icon: "🏗️" },
+      { label: "Indeks IKLH", value: "68,9", status: "Sangat Baik", icon: "🌿" },
+      { label: "Indeks Risiko Bencana", value: "Rendah", status: "DAS Barabai Aman", icon: "🛡️" },
+      { label: "Penurunan GRK", value: "-14,2%", status: "Target Tercapai", icon: "🍃" },
+    ]
+  },
+  {
+    id: 4,
+    misiNo: "MISI 4",
+    judul: "Tata Kelola BerAKHLAK & SPBE",
+    subJudul: "Pemerintahan Profesional, Digital, WTP & SPI",
+    tujuan: "Mewujudkan tata kelola pemerintahan yang profesional, akuntabel & BerAKHLAK.",
+    icon: "ShieldCheck",
+    color: "from-purple-600 to-pink-600",
+    borderColor: "border-purple-500/30",
+    badgeColor: "bg-purple-500/20 text-purple-300 border-purple-500/30",
+    stats: [
+      { label: "Opini BPK", value: "WTP (11x)", status: "Berturut-turut", icon: "🏆" },
+      { label: "Nilai SAKIP", value: "BB (78.2)", status: "Sangat Baik", icon: "📋" },
+      { label: "Indeks SPBE Digital", value: "3,85", status: "Sangat Baik", icon: "📱" },
+      { label: "Nilai SPI (Integritas)", value: "81,4", status: "Hijau (KPK)", icon: "⚖️" },
+    ]
+  }
+];

@@ -51,6 +51,7 @@ import {
   hargaPanganData,
   inflasiData,
   beritaTerkini,
+  misiBupatiData,
 } from '../data/mockData';
 
 const indicatorIcons = [
@@ -161,6 +162,40 @@ export default function HomeView({ onNavigate, onOpenAiCopilot, darkMode }) {
               {item.trend === 'down-good' && <TrendingDown className="w-3 h-3 text-emerald-500" />}
               {item.trend === 'stable' && <Minus className="w-3 h-3 text-slate-400" />}
               <span className="text-[8px] text-blue-500 dark:text-blue-400 font-semibold ml-auto">Detail →</span>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* ===== ROW 1.5: CAPAIAN 4 MISI UTAMA BUPATI KABUPATEN HULU SUNGAI TENGAH ===== */}
+      <div className="flex-shrink-0 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-1.5 w-full">
+        {misiBupatiData.map((misi) => (
+          <div 
+            key={misi.id}
+            onClick={() => onNavigate('misi-bupati')}
+            className={`dashboard-card rounded-xl p-2 cursor-pointer group border ${misi.borderColor} hover:border-emerald-500/50 transition flex flex-col justify-between relative overflow-hidden`}
+          >
+            <div>
+              <div className="flex items-center justify-between mb-1">
+                <span className={`text-[8px] font-black px-1.5 py-0.5 rounded-full ${misi.badgeColor} uppercase tracking-wider`}>
+                  {misi.misiNo}
+                </span>
+                <span className="text-[8px] font-bold text-slate-400 group-hover:text-emerald-400 transition flex items-center gap-0.5">
+                  RPJMD HST <ChevronRight className="w-2.5 h-2.5" />
+                </span>
+              </div>
+              <h4 className="text-[10px] font-extrabold text-slate-900 dark:text-white leading-tight group-hover:text-emerald-500 transition line-clamp-1">
+                {misi.judul}
+              </h4>
+              <p className="text-[8px] text-slate-500 dark:text-slate-400 line-clamp-2 mt-0.5 leading-relaxed">
+                {misi.tujuan}
+              </p>
+            </div>
+            <div className="mt-1.5 pt-1 border-t border-slate-100 dark:border-slate-800/60 flex items-center justify-between text-[7.5px]">
+              <span className="text-slate-400 font-medium">Target RPJMD 2026</span>
+              <span className="font-extrabold text-emerald-600 dark:text-emerald-400 group-hover:underline flex items-center gap-0.5">
+                Buka Menu Misi <ChevronRight className="w-2 h-2" />
+              </span>
             </div>
           </div>
         ))}

@@ -41,6 +41,7 @@ export default function App() {
         return <PetaAdministrasiView />;
       case 'ewalidata':
         return <EWalidataView />;
+      case 'misi-bupati':
       case 'strategis':
         return <DataStrategisView darkMode={darkMode} />;
       case 'inpres':

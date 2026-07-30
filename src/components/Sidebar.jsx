@@ -40,6 +40,7 @@ export default function Sidebar({ activeTab, setActiveTab, sidebarOpen, setSideb
       isOpen: strategisOpen,
       setOpen: setStrategisOpen,
       subItems: [
+        { id: 'misi-bupati', label: 'Visi & 4 Misi Strategis' },
         { id: 'strategis', label: 'Indikator Makro' },
         { id: 'inpres', label: 'Pelaporan INPRES 8 (DTSEN)' }
       ]
