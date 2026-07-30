@@ -67,7 +67,7 @@ export default function Navbar({
                 </span>
               </div>
               <p className="text-[11px] text-zinc-500 dark:text-slate-400 hidden md:block">
-                Kabupaten Hulu Sungai Tengah - Barabai
+                Kabupaten Hulu Sungai Tengah
               </p>
             </div>
           </div>

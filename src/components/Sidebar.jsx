@@ -224,7 +224,7 @@ export default function Sidebar({ activeTab, setActiveTab, sidebarOpen, setSideb
             </div>
             <h5 className="text-xs font-bold text-slate-200">Satu Data Indonesia</h5>
             <p className="text-[10px] text-slate-400 mt-0.5">
-              Bappeda Litbang & Diskominfo HST
+              Diskominfo SP HST
             </p>
             <div className="mt-2 text-[10px] text-emerald-400 font-semibold bg-emerald-950/80 py-1 px-2 rounded-lg border border-emerald-800/40">
               #HST_MURAKATA

@@ -23,27 +23,35 @@ import {
   Sparkles
 } from 'lucide-react';
 import {
+  ResponsiveContainer,
+  LineChart,
+  Line,
+  BarChart,
+  Bar,
+  PieChart,
+  Pie,
+  Cell,
+  XAxis,
+  YAxis,
+  Tooltip,
+  CartesianGrid,
+} from 'recharts';
+import { MapContainer, TileLayer, Polygon, CircleMarker, Marker, Popup, GeoJSON, Tooltip as LeafletTooltip } from 'react-leaflet';
+import 'leaflet/dist/leaflet.css';
+import L from 'leaflet';
+import { hstGeoJsonData } from '../data/hstBoundaryData.js';
+import {
   hstInfo,
   indikatorMakro,
   totalPenduduk,
   kecamatanList,
+  hstKabupatenBoundary,
   realisasiApbd,
   pengaduanData,
   hargaPanganData,
   inflasiData,
   beritaTerkini,
 } from '../data/mockData';
-import {
-  ResponsiveContainer,
-  LineChart,
-  Line,
-  XAxis,
-  YAxis,
-  Tooltip,
-  CartesianGrid,
-} from 'recharts';
-import { MapContainer, TileLayer, CircleMarker, Popup, Tooltip as LeafletTooltip } from 'react-leaflet';
-import 'leaflet/dist/leaflet.css';
 
 const indicatorIcons = [
   TrendingUp, DollarSign, TrendingDown, Scale,
@@ -66,9 +74,57 @@ const getRadius = (pop) => {
   return 8;
 };
 
+const KEC_PALETTE = [
+  '#3b82f6', // Barabai
+  '#10b981', // Batu Benawa
+  '#f59e0b', // Hantakan
+  '#ef4444', // Haruyan
+  '#8b5cf6', // Labuan Amas Selatan
+  '#06b6d4', // Labuan Amas Utara
+  '#ec4899', // Batang Alai Selatan
+  '#f97316', // Batang Alai Timur
+  '#6366f1', // Batang Alai Utara
+  '#14b8a6', // Limpasu
+  '#e11d48', // Pandawan
+];
+
+const getKecColor = (name) => {
+  const list = [
+    'BARABAI', 'BATU BENAWA', 'HANTAKAN', 'HARUYAN', 
+    'LABUAN AMAS SELATAN', 'LABUAN AMAS UTARA', 
+    'BATANG ALAI SELATAN', 'BATANG ALAI TIMUR', 'BATANG ALAI UTARA', 
+    'LIMPASU', 'PANDAWAN'
+  ];
+  const idx = list.indexOf((name || '').toUpperCase());
+  return idx >= 0 ? KEC_PALETTE[idx] : '#3b82f6';
+};
+
 const hstCenter = [-2.55, 115.40];
 
+const createKecLabelIcon = (name, isSelected) => {
+  return L.divIcon({
+    className: 'custom-kec-label',
+    html: `<div style="
+      background-color: ${isSelected ? '#0284c7' : 'rgba(255, 255, 255, 0.95)'};
+      color: ${isSelected ? '#ffffff' : '#0f172a'};
+      border: 1px solid ${isSelected ? '#0369a1' : '#94a3b8'};
+      font-size: 9px;
+      font-weight: 800;
+      padding: 2px 6px;
+      border-radius: 6px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+      white-space: nowrap;
+      pointer-events: none;
+      transform: translate(-50%, -50%);
+    ">${name}</div>`,
+    iconSize: [60, 18],
+    iconAnchor: [30, 9]
+  });
+};
+
 export default function HomeView({ onNavigate, onOpenAiCopilot, darkMode }) {
+  const [selectedKecId, setSelectedKecId] = React.useState(1);
+  const [apbdTab, setApbdTab] = React.useState('apbd');
 
   const fmt = (n) => n.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
 
@@ -114,42 +170,176 @@ export default function HomeView({ onNavigate, onOpenAiCopilot, darkMode }) {
 
         {/* LEFT COLUMN (3 cols): APBD & Pengaduan */}
         <div className="col-span-3 flex flex-col gap-2 min-h-0">
-          {/* APBD Realisasi */}
-          <div
-            className="flex-1 dashboard-card rounded-xl overflow-hidden flex flex-col min-h-0 cursor-pointer group hover:border-blue-500/50 transition duration-200"
-            onClick={() => onNavigate('apbd-belanja')}
-          >
-            <div className="flex-shrink-0 bg-gradient-to-r from-blue-900 to-blue-800 px-3 py-1.5 flex items-center justify-between">
+          {/* APBD Realisasi Card with Visual Chart (Ringkasan APBD, Pendapatan, & Belanja) */}
+          <div className="flex-1 dashboard-card rounded-xl overflow-hidden flex flex-col min-h-0 border border-slate-200 dark:border-slate-800 shadow-sm hover:border-blue-500/40 transition duration-200">
+            {/* Header with Title & Quick OPD Button */}
+            <div 
+              onClick={() => onNavigate('apbd-belanja')}
+              className="flex-shrink-0 bg-gradient-to-r from-blue-900 via-blue-850 to-blue-800 px-3 py-1.5 flex items-center justify-between cursor-pointer group"
+            >
               <h3 className="text-[10px] font-bold text-white flex items-center gap-1.5">
-                <DollarSign className="w-3 h-3" /> REALISASI APBD 2025
+                <DollarSign className="w-3.5 h-3.5 text-blue-300" /> REALISASI APBD 2025
               </h3>
               <span className="text-[8px] font-bold px-1.5 py-0.5 rounded-full bg-blue-700/80 text-blue-100 border border-blue-500/50 group-hover:bg-blue-600 transition flex items-center gap-0.5">
                 Detail OPD <ChevronRight className="w-2.5 h-2.5" />
               </span>
             </div>
-            <div className="flex-1 flex flex-col items-center justify-center p-2.5 min-h-0">
-              <div className="w-[95px] h-[95px] rounded-full flex items-center justify-center relative flex-shrink-0"
-                style={{ background: `conic-gradient(#1d4ed8 0% ${realisasiApbd.persenRealisasi}%, ${darkMode ? '#334155' : '#e2e8f0'} ${realisasiApbd.persenRealisasi}% 100%)` }}>
-                <div className="w-[65px] h-[65px] rounded-full bg-white dark:bg-slate-900 flex flex-col items-center justify-center z-10 group-hover:scale-105 transition">
-                  <span className="text-base font-extrabold text-blue-800 dark:text-blue-300">{realisasiApbd.persenRealisasi}%</span>
-                  <span className="text-[7px] text-slate-500 dark:text-slate-400 font-semibold">Realisasi</span>
+
+            {/* Content: Full-Height Graphical Visualizations (3 Donut Pie Charts + BarChart + Summary KPIs) */}
+            <div 
+              onClick={() => onNavigate('apbd-belanja')}
+              className="flex-1 p-2 flex flex-col justify-between min-h-0 cursor-pointer space-y-2"
+            >
+              {/* 3 Donut Pie Charts (APBD, Pendapatan, Belanja) */}
+              <div className="grid grid-cols-3 gap-1.5 flex-shrink-0">
+                {/* Donut 1: APBD */}
+                <div className="flex flex-col items-center bg-blue-50/70 dark:bg-blue-950/30 p-1 rounded-lg border border-blue-100 dark:border-blue-900/40">
+                  <div className="w-[60px] h-[60px] relative flex items-center justify-center">
+                    <ResponsiveContainer width="100%" height="100%">
+                      <PieChart>
+                        <Pie
+                          data={[
+                            { name: 'Realisasi', value: realisasiApbd.persenRealisasi },
+                            { name: 'Sisa', value: 100 - realisasiApbd.persenRealisasi }
+                          ]}
+                          cx="50%"
+                          cy="50%"
+                          innerRadius={18}
+                          outerRadius={26}
+                          startAngle={90}
+                          endAngle={-270}
+                          dataKey="value"
+                          stroke="none"
+                        >
+                          <Cell fill="#2563eb" />
+                          <Cell fill={darkMode ? '#334155' : '#cbd5e1'} />
+                        </Pie>
+                      </PieChart>
+                    </ResponsiveContainer>
+                    <span className="absolute text-[9px] font-black text-blue-700 dark:text-blue-300">
+                      {realisasiApbd.persenRealisasi}%
+                    </span>
+                  </div>
+                  <span className="text-[8px] font-bold text-blue-900 dark:text-blue-200 mt-0.5">APBD</span>
+                  <span className="text-[7px] text-slate-500 dark:text-slate-400 font-semibold">{realisasiApbd.realisasi} / {realisasiApbd.totalAnggaran}</span>
+                </div>
+
+                {/* Donut 2: Pendapatan */}
+                <div className="flex flex-col items-center bg-emerald-50/70 dark:bg-emerald-950/30 p-1 rounded-lg border border-emerald-100 dark:border-emerald-900/40">
+                  <div className="w-[60px] h-[60px] relative flex items-center justify-center">
+                    <ResponsiveContainer width="100%" height="100%">
+                      <PieChart>
+                        <Pie
+                          data={[
+                            { name: 'Realisasi', value: realisasiApbd.pendapatan.persen },
+                            { name: 'Sisa', value: 100 - realisasiApbd.pendapatan.persen }
+                          ]}
+                          cx="50%"
+                          cy="50%"
+                          innerRadius={18}
+                          outerRadius={26}
+                          startAngle={90}
+                          endAngle={-270}
+                          dataKey="value"
+                          stroke="none"
+                        >
+                          <Cell fill="#10b981" />
+                          <Cell fill={darkMode ? '#334155' : '#cbd5e1'} />
+                        </Pie>
+                      </PieChart>
+                    </ResponsiveContainer>
+                    <span className="absolute text-[9px] font-black text-emerald-700 dark:text-emerald-300">
+                      {realisasiApbd.pendapatan.persen}%
+                    </span>
+                  </div>
+                  <span className="text-[8px] font-bold text-emerald-900 dark:text-emerald-200 mt-0.5">Pendapatan</span>
+                  <span className="text-[7px] text-slate-500 dark:text-slate-400 font-semibold">{realisasiApbd.pendapatan.realisasi} / {realisasiApbd.pendapatan.target}</span>
+                </div>
+
+                {/* Donut 3: Belanja */}
+                <div className="flex flex-col items-center bg-indigo-50/70 dark:bg-indigo-950/30 p-1 rounded-lg border border-indigo-100 dark:border-indigo-900/40">
+                  <div className="w-[60px] h-[60px] relative flex items-center justify-center">
+                    <ResponsiveContainer width="100%" height="100%">
+                      <PieChart>
+                        <Pie
+                          data={[
+                            { name: 'Realisasi', value: realisasiApbd.belanja.persen },
+                            { name: 'Sisa', value: 100 - realisasiApbd.belanja.persen }
+                          ]}
+                          cx="50%"
+                          cy="50%"
+                          innerRadius={18}
+                          outerRadius={26}
+                          startAngle={90}
+                          endAngle={-270}
+                          dataKey="value"
+                          stroke="none"
+                        >
+                          <Cell fill="#6366f1" />
+                          <Cell fill={darkMode ? '#334155' : '#cbd5e1'} />
+                        </Pie>
+                      </PieChart>
+                    </ResponsiveContainer>
+                    <span className="absolute text-[9px] font-black text-indigo-700 dark:text-indigo-300">
+                      {realisasiApbd.belanja.persen}%
+                    </span>
+                  </div>
+                  <span className="text-[8px] font-bold text-indigo-900 dark:text-indigo-200 mt-0.5">Belanja</span>
+                  <span className="text-[7px] text-slate-500 dark:text-slate-400 font-semibold">{realisasiApbd.belanja.realisasi} / {realisasiApbd.belanja.pagu}</span>
                 </div>
               </div>
-              <div className="w-full space-y-1 mt-1.5 text-[10px]">
-                <div className="flex items-center justify-between px-2 py-0.5 rounded bg-slate-50 dark:bg-slate-800/50">
-                  <span className="text-slate-500">Anggaran:</span>
-                  <span className="font-bold text-slate-800 dark:text-slate-200">{realisasiApbd.totalAnggaran}</span>
+
+              {/* Bar Chart Anggaran vs Realisasi */}
+              <div className="flex-1 w-full bg-slate-50 dark:bg-slate-900/60 p-1.5 rounded-lg border border-slate-200/60 dark:border-slate-800 flex flex-col justify-between min-h-[90px]">
+                <div className="flex items-center justify-between text-[8px] font-bold px-1 mb-1">
+                  <span className="text-slate-700 dark:text-slate-300">Komparasi Target vs Realisasi (Rp Triliun)</span>
+                  <div className="flex items-center gap-2">
+                    <span className="flex items-center gap-1"><span className="w-1.5 h-1.5 rounded-sm bg-slate-400"></span> Target</span>
+                    <span className="flex items-center gap-1"><span className="w-1.5 h-1.5 rounded-sm bg-blue-600"></span> Realisasi</span>
+                  </div>
                 </div>
-                <div className="flex items-center justify-between px-2 py-0.5 rounded bg-blue-50 dark:bg-blue-950/40 border border-blue-200/50 dark:border-blue-900/40">
-                  <span className="text-blue-600 dark:text-blue-300 font-semibold">Realisasi:</span>
-                  <span className="font-extrabold text-blue-700 dark:text-blue-200">{realisasiApbd.realisasi}</span>
+                <div className="flex-1 w-full min-h-0">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <BarChart
+                      data={[
+                        { name: 'APBD Total', Target: 2.15, Realisasi: 1.00 },
+                        { name: 'Pendapatan', Target: 2.10, Realisasi: 1.12 },
+                        { name: 'Belanja', Target: 2.15, Realisasi: 1.00 },
+                      ]}
+                      margin={{ top: 2, right: 5, left: -25, bottom: 0 }}
+                      barGap={4}
+                    >
+                      <CartesianGrid strokeDasharray="3 3" vertical={false} stroke={darkMode ? '#334155' : '#cbd5e1'} opacity={0.4} />
+                      <XAxis dataKey="name" tick={{ fontSize: 8, fill: darkMode ? '#94a3b8' : '#475569' }} axisLine={false} tickLine={false} />
+                      <YAxis tick={{ fontSize: 7, fill: darkMode ? '#94a3b8' : '#475569' }} axisLine={false} tickLine={false} domain={[0, 2.5]} />
+                      <Tooltip 
+                        contentStyle={{ 
+                          backgroundColor: darkMode ? '#0f172a' : '#ffffff', 
+                          borderColor: darkMode ? '#334155' : '#cbd5e1', 
+                          fontSize: '9px',
+                          borderRadius: '6px'
+                        }}
+                        formatter={(val) => [`Rp ${val} T`, '']}
+                      />
+                      <Bar dataKey="Target" fill="#94a3b8" radius={[3, 3, 0, 0]} barSize={12} />
+                      <Bar dataKey="Realisasi" fill="#2563eb" radius={[3, 3, 0, 0]} barSize={12} />
+                    </BarChart>
+                  </ResponsiveContainer>
                 </div>
               </div>
-              <div className="w-full text-center mt-1">
-                <span className="text-[8px] font-semibold text-blue-600 dark:text-blue-400 group-hover:underline flex items-center justify-center gap-0.5">
-                  Lihat Realisasi Perangkat Daerah <ChevronRight className="w-2.5 h-2.5" />
-                </span>
+
+              {/* Breakdown Cards Footer (No blank spaces) */}
+              <div className="grid grid-cols-2 gap-1 text-[8px] flex-shrink-0">
+                <div className="p-1 rounded bg-slate-100 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-800 flex justify-between items-center">
+                  <span className="text-slate-500">PAD / Transfer:</span>
+                  <span className="font-bold text-emerald-600 dark:text-emerald-400">{realisasiApbd.pendapatan.pad}</span>
+                </div>
+                <div className="p-1 rounded bg-slate-100 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-800 flex justify-between items-center">
+                  <span className="text-slate-500">Belanja Operasi:</span>
+                  <span className="font-bold text-indigo-600 dark:text-indigo-400">{realisasiApbd.belanja.operasi}</span>
+                </div>
               </div>
+
             </div>
           </div>
 
@@ -187,52 +377,61 @@ export default function HomeView({ onNavigate, onOpenAiCopilot, darkMode }) {
         </div>
 
         {/* CENTER COLUMN (6 COLS HIGHLIGHT MAP CENTER): PETA KABUPATEN HST */}
-        <div className="col-span-6 dashboard-card rounded-xl overflow-hidden flex flex-col border-2 border-blue-500/30 shadow-2xl relative">
+        <div className="col-span-6 dashboard-card rounded-xl overflow-hidden flex flex-col border border-blue-500/30 shadow-2xl relative">
           {/* Header Highlight Banner */}
-          <div className="flex-shrink-0 bg-gradient-to-r from-blue-950 via-blue-900 to-blue-800 px-4 py-2 flex items-center justify-between border-b border-blue-500/30">
-            <div className="flex items-center gap-2">
-              <span className="flex h-2.5 w-2.5 relative">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
-                <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-blue-500"></span>
+          <div className="flex-shrink-0 bg-slate-900/90 dark:bg-slate-950 px-3 py-1.5 flex items-center justify-between border-b border-slate-800">
+            <div className="flex items-center gap-1.5">
+              <span className="text-[9px] font-bold px-2 py-0.5 rounded bg-blue-600/20 text-blue-400 border border-blue-500/30">
+                Polygon (Wilayah)
               </span>
-              <h3 className="text-xs font-extrabold text-white tracking-wide flex items-center gap-1.5">
-                <MapPin className="w-4 h-4 text-blue-400" /> PETA KABUPATEN HULU SUNGAI TENGAH
-              </h3>
+              <span className="text-[9px] font-semibold px-2 py-0.5 rounded bg-slate-800 text-slate-400 border border-slate-700">
+                3D VIEW
+              </span>
+              <span className="text-[9px] font-semibold px-2 py-0.5 rounded bg-slate-800 text-slate-400 border border-slate-700">
+                Pilih Kolom
+              </span>
             </div>
             <div className="flex items-center gap-2">
-              <span className="text-[9px] font-bold px-2 py-0.5 rounded-full bg-blue-500/20 text-blue-300 border border-blue-400/30 uppercase tracking-wider">
-                GIS CENTER
-              </span>
               <button
                 onClick={() => onNavigate('peta')}
-                className="text-[9px] px-2.5 py-0.5 rounded-full bg-blue-600 hover:bg-blue-500 text-white font-bold transition shadow-sm"
+                className="text-[9px] px-3 py-1 rounded-lg bg-blue-600 hover:bg-blue-500 text-white font-extrabold shadow transition flex items-center gap-1"
               >
-                Peta Lengkap ↗
+                Terapkan Konfigurasi Peta ↗
               </button>
             </div>
           </div>
 
-          <div className="flex-1 flex flex-col p-2.5 min-h-0 bg-slate-900/40 backdrop-blur-md">
-            {/* Population Bar Overlay */}
-            <div className="flex-shrink-0 flex items-center justify-between p-2 rounded-lg bg-blue-950/80 border border-blue-500/30 mb-2 shadow-inner">
-              <div className="flex items-baseline gap-2">
-                <span className="text-[9px] font-extrabold text-blue-300 tracking-wider">TOTAL PENDUDUK HST:</span>
-                <span className="text-xl font-black text-white tracking-tight">{totalPenduduk.total}</span>
-              </div>
-              <div className="flex gap-4">
-                <div className="flex items-center gap-1">
-                  <span className="w-2.5 h-2.5 rounded-full bg-blue-500 shadow-sm" />
-                  <span className="text-[9px] text-slate-300">Laki-laki: <strong className="text-white">{totalPenduduk.lakiLaki}</strong></span>
-                </div>
-                <div className="flex items-center gap-1">
-                  <span className="w-2.5 h-2.5 rounded-full bg-pink-400 shadow-sm" />
-                  <span className="text-[9px] text-slate-300">Perempuan: <strong className="text-white">{totalPenduduk.perempuan}</strong></span>
-                </div>
-              </div>
+          <div className="flex-1 flex flex-col p-2 min-h-0 bg-slate-900/40">
+            {/* Active Selected Kecamatan Information Bar */}
+            <div className="flex-shrink-0 flex items-center justify-between p-2 rounded-lg bg-blue-950/70 border border-blue-500/30 mb-1.5 text-white">
+              {(() => {
+                const activeKec = kecamatanList.find(k => k.id === selectedKecId) || kecamatanList[0];
+                return (
+                  <>
+                    <div className="flex items-center gap-2">
+                      <MapPin className="w-4 h-4 text-blue-400" />
+                      <div>
+                        <p className="text-[10px] font-extrabold text-white">KECAMATAN {activeKec.nama.toUpperCase()}</p>
+                        <p className="text-[8px] text-blue-300">Ibu Kota: {activeKec.ibuKota} · {activeKec.kategori}</p>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-4 text-right">
+                      <div>
+                        <p className="text-[8px] text-slate-400">Populasi</p>
+                        <p className="text-xs font-black text-blue-300">{activeKec.populasi.toLocaleString('id-ID')} Jiwa</p>
+                      </div>
+                      <div>
+                        <p className="text-[8px] text-slate-400">Luas Wilayah</p>
+                        <p className="text-xs font-black text-white">{activeKec.luas} km²</p>
+                      </div>
+                    </div>
+                  </>
+                );
+              })()}
             </div>
 
-            {/* Interactive Leaflet Map (HIGHLITED IN CENTER) */}
-            <div className="flex-1 rounded-xl overflow-hidden border border-blue-500/40 shadow-inner min-h-0 relative">
+            {/* Leaflet Map (Matching Reference Image Style with Clear Boundaries & Labels) */}
+            <div className="flex-1 rounded-lg overflow-hidden border border-slate-300 dark:border-slate-800 shadow-inner min-h-0 relative">
               <MapContainer
                 center={hstCenter}
                 zoom={10}
@@ -241,52 +440,85 @@ export default function HomeView({ onNavigate, onOpenAiCopilot, darkMode }) {
                 style={{ height: '100%', width: '100%' }}
                 attributionControl={false}
               >
-                <TileLayer url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png" />
-                {kecamatanList.map((kec) => {
-                  const c = getPopulationColor(kec.populasi);
-                  const r = getRadius(kec.populasi);
-                  return (
-                    <CircleMarker key={kec.id} center={[kec.lat, kec.lng]} radius={r}
-                      pathOptions={{ fillColor: c.fill, fillOpacity: 0.8, color: c.border, weight: 2 }}>
-                      <LeafletTooltip direction="top" offset={[0, -r]} opacity={0.95}>
-                        <div style={{ fontSize: '11px', lineHeight: '1.4' }}>
-                          <strong>Kec. {kec.nama}</strong><br />
-                          <span style={{ color: '#1d4ed8', fontWeight: 'bold' }}>{kec.populasi.toLocaleString('id-ID')} Jiwa</span>
+                <TileLayer 
+                  url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                />
+
+                {/* 11 Kecamatan Official GeoJSON Polygons (Exact match with murakatadigi.cloud) */}
+                <GeoJSON
+                  key={`geojson-${selectedKecId}`}
+                  data={hstGeoJsonData}
+                  style={(feature) => {
+                    const name = feature?.properties?.nama || '';
+                    const selKec = kecamatanList.find(k => k.id === selectedKecId);
+                    const isSelected = selKec && selKec.nama.toUpperCase() === name.toUpperCase();
+                    const color = getKecColor(name);
+                    return {
+                      color: isSelected ? '#ffffff' : '#475569',
+                      weight: isSelected ? 3.5 : 1.5,
+                      fillColor: color,
+                      fillOpacity: isSelected ? 0.85 : 0.5,
+                    };
+                  }}
+                  onEachFeature={(feature, layer) => {
+                    const name = feature?.properties?.nama || '';
+                    const kec = kecamatanList.find(k => k.nama.toUpperCase() === name.toUpperCase());
+                    if (kec) {
+                      layer.on({
+                        click: () => setSelectedKecId(kec.id),
+                        mouseover: (e) => {
+                          e.target.setStyle({
+                            fillOpacity: 0.75,
+                            weight: 2.5,
+                            color: '#ffffff',
+                          });
+                        },
+                        mouseout: (e) => {
+                          const selKec = kecamatanList.find(k => k.id === selectedKecId);
+                          const isSelected = selKec && selKec.nama.toUpperCase() === name.toUpperCase();
+                          const color = getKecColor(name);
+                          e.target.setStyle({
+                            fillOpacity: isSelected ? 0.85 : 0.5,
+                            weight: isSelected ? 3.5 : 1.5,
+                            color: isSelected ? '#ffffff' : '#475569',
+                          });
+                        }
+                      });
+                      layer.bindTooltip(`
+                        <div style="font-family: 'Plus Jakarta Sans', sans-serif; font-size: 11px; padding: 2px 4px;">
+                          <strong style="color: #0f172a;">Kecamatan ${kec.nama}</strong><br/>
+                          <span style="color: #475569;">Ibu Kota: ${kec.ibuKota}</span><br/>
+                          <span style="color: #0284c7; font-weight: 700;">${kec.populasi.toLocaleString('id-ID')} Jiwa</span>
                         </div>
-                      </LeafletTooltip>
-                      <Popup>
-                        <div style={{ fontSize: '12px', lineHeight: '1.5', minWidth: '150px' }}>
-                          <strong style={{ fontSize: '13px', color: '#1e3a8a' }}>Kec. {kec.nama}</strong>
-                          <div style={{ marginTop: '4px', color: '#334155' }}>
-                            <div>👥 Populasi: <strong>{kec.populasi.toLocaleString('id-ID')}</strong> Jiwa</div>
-                            <div>📐 Luas: <strong>{kec.luas}</strong> km²</div>
-                            <div>🏘️ {kec.desaCount} Desa/Kelurahan</div>
-                            <div>🏥 {kec.faskes} Faskes · 🏫 {kec.sekolah} Sekolah</div>
-                          </div>
-                        </div>
-                      </Popup>
-                    </CircleMarker>
-                  );
-                })}
+                      `, { direction: 'top', sticky: true, opacity: 0.95 });
+                    }
+                  }}
+                />
+
+                {/* Kecamatan Name Text Badge Markers */}
+                {kecamatanList.map((kec) => (
+                  <Marker
+                    key={`label-${kec.id}`}
+                    position={[kec.lat, kec.lng]}
+                    icon={createKecLabelIcon(kec.nama, kec.id === selectedKecId)}
+                    eventHandlers={{
+                      click: () => setSelectedKecId(kec.id)
+                    }}
+                  />
+                ))}
               </MapContainer>
             </div>
 
             {/* Map Legend Footer */}
-            <div className="flex-shrink-0 flex items-center justify-between mt-2 pt-1.5 border-t border-slate-700/60 text-[9px]">
-              <div className="flex items-center gap-3">
-                <span className="font-bold text-slate-400">Rasio Populasi:</span>
-                {[
-                  { color: '#1e3a8a', l: '>50rb' }, { color: '#1d4ed8', l: '30-50rb' },
-                  { color: '#3b82f6', l: '20-30rb' }, { color: '#93c5fd', l: '10-20rb' },
-                  { color: '#dbeafe', l: '<10rb' },
-                ].map((x, i) => (
-                  <div key={i} className="flex items-center gap-1">
-                    <span className="w-2.5 h-2.5 rounded-full border border-slate-600" style={{ backgroundColor: x.color }} />
-                    <span className="text-slate-300 font-medium">{x.l}</span>
-                  </div>
-                ))}
-              </div>
-              <span className="text-slate-400 italic">Sumber: {totalPenduduk.sumber}</span>
+            <div className="flex-shrink-0 flex items-center gap-2 mt-1.5 pt-1 border-t border-slate-800 text-[8px] flex-wrap">
+              <span className="font-bold text-slate-400">LEGENDA:</span>
+              {kecamatanList.slice(0, 6).map((kec) => (
+                <div key={kec.id} className="flex items-center gap-0.5 cursor-pointer" onClick={() => setSelectedKecId(kec.id)}>
+                  <span className="w-2.5 h-2.5 rounded-sm border border-white/50" style={{ backgroundColor: kec.color }} />
+                  <span className={`${selectedKecId === kec.id ? 'text-white font-bold' : 'text-slate-400'}`}>{kec.nama}</span>
+                </div>
+              ))}
+              <span className="text-slate-500">+5</span>
             </div>
           </div>
         </div>
@@ -384,7 +616,7 @@ export default function HomeView({ onNavigate, onOpenAiCopilot, darkMode }) {
       {/* Footer */}
       <div className="flex-shrink-0 text-center py-0.5">
         <p className="text-[8px] text-slate-400 dark:text-slate-500">
-          © 2025 Diskominfo HST — Dashboard Kepala Daerah Kabupaten Hulu Sungai Tengah
+          © 2025 Diskominfo SP HST — Dashboard Kepala Daerah Kabupaten Hulu Sungai Tengah
         </p>
       </div>
 

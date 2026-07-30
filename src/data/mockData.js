@@ -1,4 +1,5 @@
 // Data Komprehensif Satu Data Kabupaten Hulu Sungai Tengah (#HST_MURAKATA)
+import { hstKabupatenBoundary as shpHstBoundary, kecamatanPolygonData } from './hstBoundaryData.js';
 
 export const hstInfo = {
   nama: "Kabupaten Hulu Sungai Tengah",
@@ -160,7 +161,9 @@ export const kecamatanList = [
     lng: 115.3833,
     deskripsi: "Pusat pemerintahan, perdagangan, serta pusat jasa utama Kabupaten Hulu Sungai Tengah.",
     kategori: "Pusat Perkotaan",
-    statusData: "100% Terverifikasi"
+    statusData: "100% Terverifikasi",
+    color: "#93c5fd",
+    polygon: kecamatanPolygonData["Barabai"] || []
   },
   {
     id: 2,
@@ -175,7 +178,9 @@ export const kecamatanList = [
     lng: 115.4167,
     deskripsi: "Kawasan destinasi ekowisata Pagat, bukit batu benawa, dan aliran sungai benawa yang jernih.",
     kategori: "Pariwisata & Pertanian",
-    statusData: "98% Terverifikasi"
+    statusData: "98% Terverifikasi",
+    color: "#fdba74",
+    polygon: kecamatanPolygonData["Batu Benawa"] || []
   },
   {
     id: 3,
@@ -190,7 +195,9 @@ export const kecamatanList = [
     lng: 115.4833,
     deskripsi: "Gerbang Pegunungan Meratus dengan potensi Ekowisata Nateh, arung jeram, dan konservasi alam.",
     kategori: "Pegunungan & Ekowisata",
-    statusData: "95% Terverifikasi"
+    statusData: "95% Terverifikasi",
+    color: "#d8b4fe",
+    polygon: kecamatanPolygonData["Hantakan"] || []
   },
   {
     id: 4,
@@ -205,7 +212,9 @@ export const kecamatanList = [
     lng: 115.3000,
     deskripsi: "Sentra perkebunan karet, kelapa sawit, serta situs sejarah dan kerajinan tradisional.",
     kategori: "Perkebunan & Pertanian",
-    statusData: "96% Terverifikasi"
+    statusData: "96% Terverifikasi",
+    color: "#fed7aa",
+    polygon: kecamatanPolygonData["Haruyan"] || []
   },
   {
     id: 5,
@@ -220,7 +229,9 @@ export const kecamatanList = [
     lng: 115.3167,
     deskripsi: "Kawasan transit perdagangan utama menghubungkan wilayah Banua Enam (Pantai Hambawang).",
     kategori: "Perdagangan & Transit",
-    statusData: "99% Terverifikasi"
+    statusData: "99% Terverifikasi",
+    color: "#fda4af",
+    polygon: kecamatanPolygonData["Labuan Amas Selatan"] || []
   },
   {
     id: 6,
@@ -235,7 +246,9 @@ export const kecamatanList = [
     lng: 115.2833,
     deskripsi: "Lahan rawa lebak produktif untuk pertanian padi dan budidaya perikanan air tawar.",
     kategori: "Pertanian & Perikanan Rawa",
-    statusData: "94% Terverifikasi"
+    statusData: "94% Terverifikasi",
+    color: "#bef264",
+    polygon: kecamatanPolygonData["Labuan Amas Utara"] || []
   },
   {
     id: 7,
@@ -250,7 +263,9 @@ export const kecamatanList = [
     lng: 115.4500,
     deskripsi: "Pasar tradisional Birayang, penghasil sayur hortikultura dan hortikultura unggulan HST.",
     kategori: "Pertanian & Hortikultura",
-    statusData: "97% Terverifikasi"
+    statusData: "97% Terverifikasi",
+    color: "#99f6e4",
+    polygon: kecamatanPolygonData["Batang Alai Selatan"] || []
   },
   {
     id: 8,
@@ -265,7 +280,9 @@ export const kecamatanList = [
     lng: 115.6000,
     deskripsi: "Kawasan Hutan Rimba Meratus, permukiman adat Dayak Meratus, dan perlindungan keanekaragaman hayati.",
     kategori: "Konservasi & Adat Meratus",
-    statusData: "91% Terverifikasi"
+    statusData: "91% Terverifikasi",
+    color: "#fde68a",
+    polygon: kecamatanPolygonData["Batang Alai Timur"] || []
   },
   {
     id: 9,
@@ -280,7 +297,9 @@ export const kecamatanList = [
     lng: 115.4333,
     deskripsi: "Sentra lumbung padi beras lokal (Varietas Siam/Lokal Murakata) beririgasi teknis.",
     kategori: "Lumbung Padi Utama",
-    statusData: "98% Terverifikasi"
+    statusData: "98% Terverifikasi",
+    color: "#86efac",
+    polygon: kecamatanPolygonData["Batang Alai Utara"] || []
   },
   {
     id: 10,
@@ -295,7 +314,9 @@ export const kecamatanList = [
     lng: 115.4500,
     deskripsi: "Kecamatan penghasil produk perkebunan dan peternakan lokal yang terus berkembang.",
     kategori: "Perkebunan & Peternakan",
-    statusData: "95% Terverifikasi"
+    statusData: "95% Terverifikasi",
+    color: "#a5f3fc",
+    polygon: kecamatanPolygonData["Limpasu"] || []
   },
   {
     id: 11,
@@ -310,9 +331,14 @@ export const kecamatanList = [
     lng: 115.3500,
     deskripsi: "Daerah tangkapan ikan rawa, produksi kerajinan anyaman purun, dan pertanian sawah.",
     kategori: "Pertanian & Kerajinan Rakyat",
-    statusData: "97% Terverifikasi"
+    statusData: "97% Terverifikasi",
+    color: "#fecdd3",
+    polygon: kecamatanPolygonData["Pandawan"] || []
   }
 ];
+
+// Official Boundary of Kabupaten Hulu Sungai Tengah from ADMINISTRASI_AR.shp
+export const hstKabupatenBoundary = shpHstBoundary;
 
 // Official 37 Perangkat Daerah (PD / OPD) Kabupaten Hulu Sungai Tengah
 export const hstOpds = [
@@ -732,8 +758,27 @@ export const indikatorMakro = [
 
 // Realisasi APBD 2025
 export const realisasiApbd = {
+  // Ringkasan Total APBD
   totalAnggaran: 'Rp 2,15 T',
   realisasi: 'Rp 1,00 T',
   persenRealisasi: 46.72,
-  sisaAnggaran: 'Rp 1,15 T'
+  sisaAnggaran: 'Rp 1,15 T',
+
+  // Ringkasan Pendapatan
+  pendapatan: {
+    target: 'Rp 2,10 T',
+    realisasi: 'Rp 1,12 T',
+    persen: 53.33,
+    pad: 'Rp 185,4 M',
+    transfer: 'Rp 1,88 T'
+  },
+
+  // Ringkasan Belanja
+  belanja: {
+    pagu: 'Rp 2,15 T',
+    realisasi: 'Rp 1,00 T',
+    persen: 46.72,
+    operasi: 'Rp 650,2 M',
+    modal: 'Rp 350,8 M'
+  }
 };

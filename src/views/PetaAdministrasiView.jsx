@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { MapContainer, TileLayer, Marker, Popup, CircleMarker } from 'react-leaflet';
+import { MapContainer, TileLayer, Marker, Popup, CircleMarker, Polygon, GeoJSON, Tooltip as LeafletTooltip } from 'react-leaflet';
 import { 
   MapPin, 
   Users, 
@@ -13,8 +13,25 @@ import {
   CheckCircle2,
   Navigation
 } from 'lucide-react';
-import { kecamatanList, hstInfo } from '../data/mockData';
+import { kecamatanList, hstKabupatenBoundary, hstInfo } from '../data/mockData';
+import { hstGeoJsonData } from '../data/hstBoundaryData.js';
 import L from 'leaflet';
+
+const KEC_PALETTE = [
+  '#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6',
+  '#06b6d4', '#ec4899', '#f97316', '#6366f1', '#14b8a6', '#e11d48'
+];
+
+const getKecColor = (name) => {
+  const list = [
+    'BARABAI', 'BATU BENAWA', 'HANTAKAN', 'HARUYAN', 
+    'LABUAN AMAS SELATAN', 'LABUAN AMAS UTARA', 
+    'BATANG ALAI SELATAN', 'BATANG ALAI TIMUR', 'BATANG ALAI UTARA', 
+    'LIMPASU', 'PANDAWAN'
+  ];
+  const idx = list.indexOf((name || '').toUpperCase());
+  return idx >= 0 ? KEC_PALETTE[idx] : '#3b82f6';
+};
 
 // Fix Default Leaflet Marker Icon issue in React
 delete L.Icon.Default.prototype._getIconUrl;
@@ -23,6 +40,27 @@ L.Icon.Default.mergeOptions({
   iconUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png',
   shadowUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png',
 });
+
+const createKecLabelIcon = (name, isSelected) => {
+  return L.divIcon({
+    className: 'custom-kec-label',
+    html: `<div style="
+      background-color: ${isSelected ? '#0284c7' : 'rgba(255, 255, 255, 0.95)'};
+      color: ${isSelected ? '#ffffff' : '#0f172a'};
+      border: 1px solid ${isSelected ? '#0369a1' : '#94a3b8'};
+      font-size: 9px;
+      font-weight: 800;
+      padding: 2px 6px;
+      border-radius: 6px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+      white-space: nowrap;
+      pointer-events: none;
+      transform: translate(-50%, -50%);
+    ">${name}</div>`,
+    iconSize: [60, 18],
+    iconAnchor: [30, 9]
+  });
+};
 
 export default function PetaAdministrasiView() {
   const [selectedKecamatan, setSelectedKecamatan] = useState(kecamatanList[0]);
@@ -52,7 +90,7 @@ export default function PetaAdministrasiView() {
             Peta Administrasi 11 Kecamatan HST
           </h2>
           <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
-            Visualisasi geospasial wilayah Kabupaten Hulu Sungai Tengah (Ibu Kota: Barabai)
+            Visualisasi geospasial batas wilayah Kabupaten Hulu Sungai Tengah (Ibu Kota: Barabai)
           </p>
         </div>
 
@@ -92,38 +130,70 @@ export default function PetaAdministrasiView() {
             zoom={10} 
             scrollWheelZoom={true}
             style={{ width: '100%', height: '100%' }}
+            attributionControl={false}
           >
             <TileLayer
-              attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
               url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
             />
 
-            {filteredKecamatan.map((kec) => (
-              <React.Fragment key={kec.id}>
-                <CircleMarker
-                  center={[kec.lat, kec.lng]}
-                  radius={kec.id === selectedKecamatan?.id ? 14 : 10}
-                  pathOptions={{
-                    color: kec.id === selectedKecamatan?.id ? '#fbbf24' : '#22c55e',
-                    fillColor: kec.id === selectedKecamatan?.id ? '#f59e0b' : '#16a34a',
-                    fillOpacity: 0.8,
-                    weight: 3
-                  }}
-                  eventHandlers={{
-                    click: () => setSelectedKecamatan(kec)
-                  }}
-                >
-                  <Popup>
-                    <div className="p-1">
-                      <h4 className="font-bold text-sm text-slate-900 dark:text-white">Kecamatan {kec.nama}</h4>
-                      <p className="text-xs text-slate-600 dark:text-slate-300">Ibu Kota: {kec.ibuKota}</p>
-                      <p className="text-xs font-semibold text-emerald-600 dark:text-emerald-400 mt-1">
-                        Populasi: {kec.populasi.toLocaleString('id-ID')} Jiwa
-                      </p>
+            {/* 11 Kecamatan Official GeoJSON Polygons (Exact match with murakatadigi.cloud) */}
+            <GeoJSON
+              key={`geojson-admin-${selectedKecamatan?.id}`}
+              data={hstGeoJsonData}
+              style={(feature) => {
+                const name = feature?.properties?.nama || '';
+                const isSelected = selectedKecamatan && selectedKecamatan.nama.toUpperCase() === name.toUpperCase();
+                const color = getKecColor(name);
+                return {
+                  color: isSelected ? '#ffffff' : '#475569',
+                  weight: isSelected ? 3.5 : 1.5,
+                  fillColor: color,
+                  fillOpacity: isSelected ? 0.85 : 0.5,
+                };
+              }}
+              onEachFeature={(feature, layer) => {
+                const name = feature?.properties?.nama || '';
+                const kec = kecamatanList.find(k => k.nama.toUpperCase() === name.toUpperCase());
+                if (kec) {
+                  layer.on({
+                    click: () => setSelectedKecamatan(kec),
+                    mouseover: (e) => {
+                      e.target.setStyle({
+                        fillOpacity: 0.75,
+                        weight: 2.5,
+                        color: '#ffffff',
+                      });
+                    },
+                    mouseout: (e) => {
+                      const isSelected = selectedKecamatan && selectedKecamatan.nama.toUpperCase() === name.toUpperCase();
+                      const color = getKecColor(name);
+                      e.target.setStyle({
+                        fillOpacity: isSelected ? 0.85 : 0.5,
+                        weight: isSelected ? 3.5 : 1.5,
+                        color: isSelected ? '#ffffff' : '#475569',
+                      });
+                    }
+                  });
+                  layer.bindTooltip(`
+                    <div style="font-family: 'Plus Jakarta Sans', sans-serif; font-size: 11px; padding: 2px 4px;">
+                      <strong style="color: #0f172a;">Kecamatan ${kec.nama}</strong><br/>
+                      <span style="color: #0284c7; font-weight: 700;">${kec.populasi.toLocaleString('id-ID')} Jiwa</span>
                     </div>
-                  </Popup>
-                </CircleMarker>
-              </React.Fragment>
+                  `, { direction: 'top', sticky: true, opacity: 0.95 });
+                }
+              }}
+            />
+
+            {/* Kecamatan Name Text Badge Markers */}
+            {filteredKecamatan.map((kec) => (
+              <Marker
+                key={`label-${kec.id}`}
+                position={[kec.lat, kec.lng]}
+                icon={createKecLabelIcon(kec.nama, kec.id === selectedKecamatan?.id)}
+                eventHandlers={{
+                  click: () => setSelectedKecamatan(kec)
+                }}
+              />
             ))}
           </MapContainer>
 
