@@ -1,317 +1,416 @@
 import React from 'react';
-import { 
-  CheckCircle2, 
-  MapPin, 
-  TrendingUp, 
-  Building2, 
-  FileCheck, 
-  ArrowUpRight, 
-  Sparkles, 
-  CloudSun, 
-  Activity, 
-  Database 
+import {
+  ArrowUpRight,
+  ArrowDownRight,
+  Minus,
+  TrendingUp,
+  TrendingDown,
+  CheckCircle2,
+  Clock,
+  AlertCircle,
+  Users,
+  ChevronRight,
+  Info,
+  Newspaper,
+  Scale,
+  Leaf,
+  Briefcase,
+  DollarSign,
+  Target,
+  Award,
+  MessageSquare,
+  MapPin,
 } from 'lucide-react';
-import { 
-  hstInfo, 
-  macroStats, 
-  apbdData, 
-  bmkgWeatherData, 
-  recentActivities 
+import {
+  hstInfo,
+  indikatorMakro,
+  totalPenduduk,
+  kecamatanList,
+  realisasiApbd,
+  pengaduanData,
+  hargaPanganData,
+  inflasiData,
+  beritaTerkini,
 } from '../data/mockData';
-import { ResponsiveContainer, AreaChart, Area, XAxis, YAxis, Tooltip, CartesianGrid } from 'recharts';
+import {
+  ResponsiveContainer,
+  LineChart,
+  Line,
+  XAxis,
+  YAxis,
+  Tooltip,
+  CartesianGrid,
+} from 'recharts';
+import { MapContainer, TileLayer, CircleMarker, Popup, Tooltip as LeafletTooltip } from 'react-leaflet';
+import 'leaflet/dist/leaflet.css';
+
+const indicatorIcons = [
+  TrendingUp, DollarSign, TrendingDown, Scale,
+  Users, Leaf, Award, Briefcase
+];
+
+const getPopulationColor = (pop) => {
+  if (pop > 50000) return { fill: '#1e3a8a', border: '#1e40af' };
+  if (pop > 30000) return { fill: '#1d4ed8', border: '#2563eb' };
+  if (pop > 20000) return { fill: '#3b82f6', border: '#60a5fa' };
+  if (pop > 10000) return { fill: '#93c5fd', border: '#bfdbfe' };
+  return { fill: '#dbeafe', border: '#e0f2fe' };
+};
+
+const getRadius = (pop) => {
+  if (pop > 50000) return 22;
+  if (pop > 30000) return 17;
+  if (pop > 20000) return 14;
+  if (pop > 10000) return 11;
+  return 8;
+};
+
+const hstCenter = [-2.55, 115.40];
 
 export default function HomeView({ onNavigate, onOpenAiCopilot, darkMode }) {
 
-  const quickCards = [
-    {
-      id: 'ewalidata',
-      title: 'Admin & eWalidata SIPD',
-      desc: 'Kelola data daerah, verifikasi OPD, dan sinkronisasi SIPD',
-      icon: Database,
-      color: 'from-cerulean-500/10 to-cerulean-700/10 dark:from-emerald-600/30 dark:to-emerald-900/40 border-cerulean-500/30 dark:border-emerald-500/40 text-cerulean-700 dark:text-emerald-400',
-      btnText: 'Kelola Data'
-    },
-    {
-      id: 'ewalidata',
-      title: 'Verifikasi Data Sektoral',
-      desc: 'Validasi dan audit kelayakan 1.842 dataset terdaftar',
-      icon: CheckCircle2,
-      color: 'from-tealAcc-500/10 to-tealAcc-700/10 dark:from-teal-600/30 dark:to-teal-900/40 border-tealAcc-500/30 dark:border-teal-500/40 text-tealAcc-700 dark:text-teal-300',
-      btnText: 'Verifikasi OPD'
-    },
-    {
-      id: 'profil',
-      title: 'Profil Daerah HST',
-      desc: 'Informasi demografi, wilayah, dan potensi Barabai',
-      icon: MapPin,
-      color: 'from-indigo-500/10 to-indigo-700/10 dark:from-indigo-600/30 dark:to-indigo-900/40 border-indigo-500/30 dark:border-indigo-500/40 text-indigo-700 dark:text-indigo-300',
-      btnText: 'Lihat Profil'
-    },
-    {
-      id: 'copilot',
-      title: 'Murakata AI Assistant',
-      desc: 'Tanya statistik dan dokumen publikasi dengan AI cerdas',
-      icon: Sparkles,
-      color: 'from-amber-500/10 to-amber-700/10 dark:from-amber-600/30 dark:to-amber-900/40 border-amber-500/30 dark:border-amber-500/40 text-amber-700 dark:text-amber-300',
-      btnText: 'Tanya AI',
-      isAi: true
-    }
-  ];
-
-  const counters = [
-    { label: 'Total OPD Terintegrasi', value: '37 Dinas', icon: Building2, change: '100% Sync' },
-    { label: 'Dataset Terpublikasi', value: '1.842', icon: FileCheck, change: '+124 Bln ini' },
-    { label: 'Wilayah Kecamatan', value: '11 Kec', icon: MapPin, change: '169 Desa/Kel' },
-    { label: 'Indeks Pembangunan (IPM)', value: macroStats.ipm.value, icon: TrendingUp, change: macroStats.ipm.change }
-  ];
+  const fmt = (n) => n.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
 
   return (
-    <div className="space-y-8 pb-12">
+    <div className="flex flex-col h-[calc(100vh-80px)] gap-2 overflow-hidden">
 
-      {/* Hero Header Section */}
-      <section className="relative overflow-hidden rounded-3xl bg-gradient-to-b from-emerald-950/80 via-slate-900 to-slate-950 border border-emerald-500/30 p-6 sm:p-10 shadow-2xl">
-        {/* Background Decorative Elements */}
-        <div className="absolute top-0 right-0 -mr-20 -mt-20 w-96 h-96 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none animate-pulse-glow" />
-        <div className="absolute bottom-0 left-1/3 -mb-20 w-80 h-80 bg-teal-500/10 rounded-full blur-3xl pointer-events-none" />
-
-        <div className="relative z-10 max-w-4xl mx-auto text-center space-y-5">
-          
-          {/* HST Logo Emblem */}
-          <div className="flex justify-center">
-            <div className="relative p-3 rounded-2xl bg-gradient-to-b from-emerald-900/90 to-slate-950 border border-emerald-400/40 shadow-glow-green">
-              <img 
-                src={hstInfo.logoUrl} 
-                alt="Logo Kabupaten Hulu Sungai Tengah" 
-                className="w-16 h-20 object-contain filter drop-shadow-md"
-                onError={(e) => {
-                  e.target.onerror = null;
-                  e.target.src = "https://placehold.co/120x150/166534/ffffff?text=HST";
-                }}
-              />
-            </div>
+      {/* ===== ROW 1: Header + Indikator Makro ===== */}
+      <div className="flex-shrink-0 flex items-stretch gap-2">
+        {/* Mini Header */}
+        <div className="flex-shrink-0 flex items-center gap-3 rounded-xl bg-gradient-to-r from-blue-950 via-blue-900 to-blue-800 px-4 py-2 shadow-lg">
+          <div className="p-1.5 rounded-lg bg-white/10 border border-white/20">
+            <img
+              src={hstInfo.logoUrl}
+              alt="Logo HST"
+              className="w-7 h-8 object-contain"
+              onError={(e) => { e.target.onerror = null; e.target.src = "https://placehold.co/56x64/1e3a5f/ffffff?text=HST"; }}
+            />
           </div>
-
-          {/* Tagline Badge */}
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-emerald-500/20 border border-emerald-500/40 text-emerald-300 text-xs font-bold shadow-sm backdrop-blur-md">
-            <Sparkles className="w-3.5 h-3.5 text-emerald-400 animate-spin" />
-            <span>#HST_MURAKATA (Mufakat Rakat Seia Sekata)</span>
+          <div>
+            <h1 className="text-xs font-extrabold text-white tracking-tight leading-tight">DASHBOARD KEPALA DAERAH</h1>
+            <p className="text-[9px] text-blue-200 font-medium">KAB. HULU SUNGAI TENGAH</p>
           </div>
-
-          {/* Main Title & Subtitle */}
-          <div className="space-y-2">
-            <h1 className="text-2xl sm:text-4xl md:text-5xl font-extrabold tracking-tight text-white leading-tight font-sans">
-              Dashboard Data <br className="hidden sm:inline" />
-              <span className="bg-gradient-to-r from-emerald-400 via-teal-300 to-amber-300 bg-clip-text text-transparent">
-                Kabupaten Hulu Sungai Tengah
-              </span>
-            </h1>
-            <p className="text-xs sm:text-sm md:text-base text-slate-300 max-w-2xl mx-auto font-normal leading-relaxed">
-              {hstInfo.subTagline} — Barabai, Kalimantan Selatan.
-            </p>
-          </div>
-
-          {/* Quick Action Badges */}
-          <div className="flex flex-wrap items-center justify-center gap-3 pt-2">
-            <button 
-              onClick={() => onNavigate('ewalidata')}
-              className="px-5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-semibold text-xs transition shadow-lg shadow-emerald-950/80 flex items-center gap-2"
-            >
-              <Database className="w-4 h-4" /> Jelajahi Dataset HST
-            </button>
-            <button 
-              onClick={() => onNavigate('peta')}
-              className="px-5 py-2.5 rounded-xl bg-slate-800/90 hover:bg-slate-700 text-slate-200 border border-slate-700 font-semibold text-xs transition flex items-center gap-2"
-            >
-              <MapPin className="w-4 h-4 text-emerald-400" /> Peta 11 Kecamatan
-            </button>
-          </div>
-
         </div>
-      </section>
 
-      {/* Quick Access Cards */}
-      <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        {quickCards.map((card, idx) => {
-          const Icon = card.icon;
-          return (
-            <div 
+        {/* Indikator Makro Cards */}
+        <div className="flex-1 flex gap-1.5 overflow-x-auto indicator-scroll">
+          {indikatorMakro.map((item, idx) => (
+            <div
               key={idx}
-              className={`p-5 rounded-2xl bg-gradient-to-br ${card.color} bg-slate-50/90 dark:bg-zinc-900/60 border border-slate-200/80 dark:border-zinc-800/80 backdrop-blur-md flex flex-col justify-between space-y-4 group hover:scale-[1.02] hover:border-cerulean-500/30 dark:hover:border-emerald-500/30 transition cursor-pointer`}
-              onClick={() => card.isAi ? onOpenAiCopilot() : onNavigate(card.id)}
-            >
-              <div className="flex items-start justify-between">
-                <div className="p-2.5 rounded-xl bg-slate-200/50 dark:bg-slate-900/80 border border-slate-300/40 dark:border-slate-700/60 shadow-inner text-slate-700 dark:text-zinc-300">
-                  <Icon className="w-6 h-6" />
-                </div>
-                <ArrowUpRight className="w-4 h-4 opacity-50 group-hover:opacity-100 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition text-slate-500 dark:text-zinc-300" />
-              </div>
-
-              <div>
-                <h3 className="text-sm font-bold text-slate-800 dark:text-white group-hover:text-cerulean-600 dark:group-hover:text-emerald-300 transition">
-                  {card.title}
-                </h3>
-                <p className="text-xs text-zinc-500 dark:text-slate-400 mt-1 leading-snug">
-                  {card.desc}
-                </p>
-              </div>
-
-              <div className="pt-2 border-t border-slate-200 dark:border-slate-800/60 flex items-center justify-between">
-                <span className="text-[11px] font-semibold text-slate-600 dark:text-slate-300 group-hover:text-cerulean-600 dark:group-hover:text-white">
-                  {card.btnText}
-                </span>
-                <span className="w-2 h-2 rounded-full bg-cerulean-500 dark:bg-emerald-400 animate-ping" />
-              </div>
-            </div>
-          );
-        })}
-      </section>
-
-      {/* Counters Grid */}
-      <section className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        {counters.map((c, i) => {
-          const Icon = c.icon;
-          return (
-            <div key={i} className="p-4 rounded-2xl glass-panel border border-zinc-200/50 dark:border-slate-800/80 flex items-center gap-4">
-              <div className="p-3 rounded-xl bg-cerulean-500/10 dark:bg-emerald-500/10 border border-cerulean-500/20 dark:border-emerald-500/30 text-cerulean-600 dark:text-emerald-400">
-                <Icon className="w-5 h-5" />
-              </div>
-              <div>
-                <p className="text-[11px] text-zinc-500 dark:text-slate-400 font-medium">{c.label}</p>
-                <h4 className="text-xl font-extrabold text-slate-800 dark:text-white mt-0.5 tracking-tight">{c.value}</h4>
-                <span className="text-[10px] text-cerulean-600 dark:text-emerald-400 font-semibold">{c.change}</span>
-              </div>
-            </div>
-          );
-        })}
-      </section>
-
-      {/* Main Grid: Chart & Macro Stats */}
-      <section className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        
-        {/* Left 2 Cols: Recharts IPM & PDRB Trend */}
-        <div className="lg:col-span-2 p-6 rounded-2xl glass-panel border border-zinc-200/50 dark:border-slate-800/80 space-y-4">
-          <div className="flex items-center justify-between">
-            <div>
-              <h3 className="text-base font-bold text-slate-800 dark:text-white flex items-center gap-2">
-                <TrendingUp className="w-4 h-4 text-cerulean-600 dark:text-emerald-400" />
-                Tren Pembangunan & Indeks Pembangunan Manusia (IPM)
-              </h3>
-              <p className="text-xs text-zinc-500 dark:text-slate-400 mt-0.5">
-                Perkembangan PDRB (Rp Triliun) & IPM Kabupaten Hulu Sungai Tengah 2020-2025
-              </p>
-            </div>
-            <button 
+              className="indicator-card dashboard-card rounded-lg px-2.5 py-2 cursor-pointer group flex-shrink-0 min-w-[120px] flex-1"
               onClick={() => onNavigate('strategis')}
-              className="text-xs text-cerulean-600 dark:text-emerald-400 hover:text-cerulean-500 font-semibold flex items-center gap-1"
             >
-              Detail <ArrowUpRight className="w-3.5 h-3.5" />
+              <div className="flex items-center gap-1.5 mb-1">
+                <span
+                  className="w-4 h-4 rounded-full flex items-center justify-center text-[8px] font-extrabold text-white flex-shrink-0"
+                  style={{ backgroundColor: item.color }}
+                >
+                  {item.no}
+                </span>
+                <span className="text-[8px] font-semibold text-slate-500 dark:text-slate-400 leading-tight line-clamp-2">
+                  {item.label}
+                </span>
+              </div>
+              <div className="flex items-baseline gap-0.5">
+                {item.prefix && <span className="text-[9px] font-semibold text-slate-400">{item.prefix}</span>}
+                <span className="text-base font-extrabold text-slate-900 dark:text-white tracking-tight">{item.value}</span>
+              </div>
+              <p className="text-[8px] text-slate-400 dark:text-slate-500 mt-0.5">{item.target}</p>
+              <div className="flex items-center mt-1">
+                {item.trend === 'up' && <TrendingUp className="w-3 h-3 text-emerald-500" />}
+                {item.trend === 'down-good' && <TrendingDown className="w-3 h-3 text-emerald-500" />}
+                {item.trend === 'stable' && <Minus className="w-3 h-3 text-slate-400" />}
+                <span className="text-[8px] text-blue-500 dark:text-blue-400 font-semibold ml-auto">Detail →</span>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* ===== ROW 2: Peta + APBD + Pengaduan ===== */}
+      <div className="flex-1 grid grid-cols-12 gap-2 min-h-0">
+
+        {/* LEFT: Peta Kabupaten (5 cols) */}
+        <div className="col-span-5 dashboard-card rounded-xl overflow-hidden flex flex-col">
+          <div className="flex-shrink-0 bg-gradient-to-r from-blue-900 to-blue-800 px-3 py-1.5 flex items-center justify-between">
+            <h3 className="text-[10px] font-bold text-white flex items-center gap-1.5">
+              <MapPin className="w-3 h-3" /> PETA KAB. HULU SUNGAI TENGAH
+            </h3>
+            <button onClick={() => onNavigate('peta')} className="text-[8px] px-1.5 py-0.5 rounded-full bg-blue-700/80 text-blue-200 font-semibold border border-blue-600/50 hover:bg-blue-600/80 transition">
+              Peta Lengkap ↗
             </button>
           </div>
+          <div className="flex-1 flex flex-col p-2 min-h-0">
+            {/* Pop summary */}
+            <div className="flex-shrink-0 p-2 rounded-lg bg-blue-50 dark:bg-blue-950/30 border border-blue-100 dark:border-blue-900/50 mb-2">
+              <div className="flex items-baseline gap-2">
+                <div>
+                  <p className="text-[9px] font-bold text-slate-600 dark:text-slate-400">TOTAL PENDUDUK</p>
+                  <p className="text-lg font-extrabold text-blue-900 dark:text-blue-300 tracking-tight leading-tight">{totalPenduduk.total}</p>
+                </div>
+                <div className="flex gap-3 ml-auto">
+                  <div className="flex items-center gap-1">
+                    <span className="w-2 h-2 rounded-full bg-blue-500" />
+                    <span className="text-[8px] text-slate-500 dark:text-slate-400">L: <b>{totalPenduduk.lakiLaki}</b></span>
+                  </div>
+                  <div className="flex items-center gap-1">
+                    <span className="w-2 h-2 rounded-full bg-pink-400" />
+                    <span className="text-[8px] text-slate-500 dark:text-slate-400">P: <b>{totalPenduduk.perempuan}</b></span>
+                  </div>
+                </div>
+              </div>
+            </div>
 
-          <div className="h-64 w-full">
-            <ResponsiveContainer width="100%" height="100%">
-              <AreaChart data={apbdData.trenPdrb}>
-                <defs>
-                  <linearGradient id="colorIpm" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#0ea5e9" stopOpacity={0.4}/>
-                    <stop offset="95%" stopColor="#0ea5e9" stopOpacity={0}/>
-                  </linearGradient>
-                  <linearGradient id="colorPdrb" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#0d9488" stopOpacity={0.4}/>
-                    <stop offset="95%" stopColor="#0d9488" stopOpacity={0}/>
-                  </linearGradient>
-                </defs>
-                <CartesianGrid strokeDasharray="3 3" stroke={darkMode ? "#334155" : "#e2e8f0"} opacity={darkMode ? 0.5 : 0.8} />
-                <XAxis dataKey="tahun" stroke={darkMode ? "#94a3b8" : "#64748b"} fontSize={11} />
-                <YAxis stroke={darkMode ? "#94a3b8" : "#64748b"} fontSize={11} domain={[60, 80]} />
-                <Tooltip 
-                  contentStyle={{ 
-                    backgroundColor: darkMode ? '#0f172a' : '#f8fafc', 
-                    borderColor: darkMode ? '#334155' : '#cbd5e1', 
-                    borderRadius: '0.75rem', 
-                    fontSize: '12px', 
-                    color: darkMode ? '#fff' : '#1e293b' 
-                  }}
-                />
-                <Area type="monotone" dataKey="ipm" name="IPM HST" stroke="#0ea5e9" strokeWidth={3} fillOpacity={1} fill="url(#colorIpm)" />
-                <Area type="monotone" dataKey="pdrb" name="PDRB (Triliun)" stroke="#0d9488" strokeWidth={2} fillOpacity={1} fill="url(#colorPdrb)" />
-              </AreaChart>
-            </ResponsiveContainer>
+            {/* Map */}
+            <div className="flex-1 rounded-lg overflow-hidden border border-slate-200 dark:border-slate-700/50 min-h-0">
+              <MapContainer
+                center={hstCenter}
+                zoom={10}
+                scrollWheelZoom={false}
+                zoomControl={false}
+                style={{ height: '100%', width: '100%' }}
+                attributionControl={false}
+              >
+                <TileLayer url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png" />
+                {kecamatanList.map((kec) => {
+                  const c = getPopulationColor(kec.populasi);
+                  const r = getRadius(kec.populasi);
+                  return (
+                    <CircleMarker key={kec.id} center={[kec.lat, kec.lng]} radius={r}
+                      pathOptions={{ fillColor: c.fill, fillOpacity: 0.75, color: c.border, weight: 2 }}>
+                      <LeafletTooltip direction="top" offset={[0, -r]} opacity={0.95}>
+                        <div style={{ fontSize: '10px', lineHeight: '1.3' }}>
+                          <strong>Kec. {kec.nama}</strong><br />
+                          <span style={{ color: '#1d4ed8' }}>{kec.populasi.toLocaleString('id-ID')} Jiwa</span>
+                        </div>
+                      </LeafletTooltip>
+                      <Popup>
+                        <div style={{ fontSize: '11px', lineHeight: '1.4', minWidth: '140px' }}>
+                          <strong>Kec. {kec.nama}</strong>
+                          <div style={{ marginTop: '3px', color: '#334155' }}>
+                            <div>👥 {kec.populasi.toLocaleString('id-ID')} Jiwa</div>
+                            <div>📐 {kec.luas} km² · {kec.desaCount} Desa</div>
+                            <div>🏥 {kec.faskes} Faskes · 🏫 {kec.sekolah} Sekolah</div>
+                          </div>
+                        </div>
+                      </Popup>
+                    </CircleMarker>
+                  );
+                })}
+              </MapContainer>
+            </div>
+
+            {/* Legend */}
+            <div className="flex-shrink-0 flex flex-wrap items-center gap-x-2 gap-y-0.5 mt-1.5 pt-1 border-t border-slate-200 dark:border-slate-700/50">
+              {[
+                { color: '#1e3a8a', l: '>50rb' }, { color: '#1d4ed8', l: '30-50rb' },
+                { color: '#3b82f6', l: '20-30rb' }, { color: '#93c5fd', l: '10-20rb' },
+                { color: '#dbeafe', l: '<10rb' },
+              ].map((x, i) => (
+                <div key={i} className="flex items-center gap-0.5">
+                  <span className="w-2.5 h-2.5 rounded-full border border-slate-300 dark:border-slate-600" style={{ backgroundColor: x.color }} />
+                  <span className="text-[8px] text-slate-400">{x.l}</span>
+                </div>
+              ))}
+              <span className="text-[7px] text-slate-400 italic ml-auto">Sumber: {totalPenduduk.sumber}</span>
+            </div>
           </div>
-
-          <div className="grid grid-cols-3 gap-3 pt-2 border-t border-zinc-200 dark:border-slate-800/80 text-center">
-            <div className="p-2 rounded-xl bg-zinc-50 dark:bg-slate-900/60 border border-zinc-100 dark:border-slate-800">
-              <span className="text-[10px] text-zinc-500 dark:text-slate-400">Pertumbuhan Ekonomi</span>
-              <p className="text-sm font-bold text-cerulean-600 dark:text-emerald-400">{macroStats.pertumbuhanEkonomi.value}</p>
-            </div>
-            <div className="p-2 rounded-xl bg-zinc-50 dark:bg-slate-900/60 border border-zinc-100 dark:border-slate-800">
-              <span className="text-[10px] text-zinc-500 dark:text-slate-400">Kemiskinan</span>
-              <p className="text-sm font-bold text-tealAcc-600 dark:text-teal-300">{macroStats.kemiskinan.value}</p>
-            </div>
-            <div className="p-2 rounded-xl bg-zinc-50 dark:bg-slate-900/60 border border-zinc-100 dark:border-slate-800">
-              <span className="text-[10px] text-zinc-500 dark:text-slate-400">Inflasi HST</span>
-              <p className="text-sm font-bold text-amber-600 dark:text-amber-400">{macroStats.inflasi.value}</p>
-            </div>
-          </div>
-
         </div>
 
-        {/* Right Col: Cuaca BMKG & Activity Feed */}
-        <div className="space-y-6">
-          
-          {/* BMKG Weather Card */}
-          <div className="p-5 rounded-2xl glass-panel border border-zinc-200/50 dark:border-slate-800/80 space-y-3">
-            <div className="flex items-center justify-between">
-              <h4 className="text-xs font-bold text-slate-800 dark:text-white flex items-center gap-2">
-                <CloudSun className="w-4 h-4 text-amber-500 dark:text-amber-400" /> Weather BMKG Barabai
-              </h4>
-              <span className="text-[10px] px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-600 dark:text-amber-300 font-bold border border-amber-500/30">
-                Update Realtime
+        {/* MIDDLE: Realisasi APBD (4 cols) */}
+        <div className="col-span-4 dashboard-card rounded-xl overflow-hidden flex flex-col">
+          <div className="flex-shrink-0 bg-gradient-to-r from-blue-900 to-blue-800 px-3 py-1.5">
+            <h3 className="text-[10px] font-bold text-white flex items-center gap-1.5">
+              <DollarSign className="w-3 h-3" /> REALISASI ANGGARAN APBD 2025
+            </h3>
+          </div>
+          <div className="flex-1 flex flex-col items-center justify-center p-3 min-h-0">
+            {/* Donut */}
+            <div className="w-[130px] h-[130px] rounded-full flex items-center justify-center relative flex-shrink-0"
+              style={{ background: `conic-gradient(#1d4ed8 0% ${realisasiApbd.persenRealisasi}%, ${darkMode ? '#334155' : '#e2e8f0'} ${realisasiApbd.persenRealisasi}% 100%)` }}>
+              <div className="w-[90px] h-[90px] rounded-full bg-white dark:bg-slate-900 flex flex-col items-center justify-center z-10">
+                <span className="text-xl font-extrabold text-blue-800 dark:text-blue-300">{realisasiApbd.persenRealisasi}%</span>
+                <span className="text-[8px] text-slate-500 dark:text-slate-400 font-semibold">Realisasi</span>
+              </div>
+            </div>
+
+            {/* Details */}
+            <div className="w-full space-y-1.5 mt-3">
+              {[
+                { label: 'Total Anggaran', value: realisasiApbd.totalAnggaran, accent: false },
+                { label: 'Realisasi', value: realisasiApbd.realisasi, accent: true },
+                { label: 'Sisa Anggaran', value: realisasiApbd.sisaAnggaran, accent: false },
+              ].map((row, i) => (
+                <div key={i} className={`flex items-center justify-between px-2.5 py-1.5 rounded-lg border text-xs ${
+                  row.accent
+                    ? 'bg-blue-50 dark:bg-blue-950/30 border-blue-100 dark:border-blue-800/50'
+                    : 'bg-slate-50 dark:bg-slate-800/50 border-slate-100 dark:border-slate-700/50'
+                }`}>
+                  <span className={row.accent ? 'text-blue-700 dark:text-blue-300' : 'text-slate-600 dark:text-slate-400'}>{row.label}</span>
+                  <span className={`font-bold ${row.accent ? 'text-blue-800 dark:text-blue-200' : 'text-slate-900 dark:text-white'}`}>{row.value}</span>
+                </div>
+              ))}
+            </div>
+            <button onClick={() => onNavigate('apbd-ringkasan')} className="mt-2 text-[10px] text-blue-600 dark:text-blue-400 font-semibold flex items-center gap-0.5 hover:text-blue-500 transition">
+              Lihat Detail <ChevronRight className="w-3 h-3" />
+            </button>
+          </div>
+        </div>
+
+        {/* RIGHT: Pengaduan Masyarakat (3 cols) */}
+        <div className="col-span-3 dashboard-card rounded-xl overflow-hidden flex flex-col">
+          <div className="flex-shrink-0 bg-gradient-to-r from-blue-900 to-blue-800 px-3 py-1.5">
+            <h3 className="text-[10px] font-bold text-white flex items-center gap-1.5">
+              <MessageSquare className="w-3 h-3" /> PENGADUAN MASYARAKAT
+            </h3>
+          </div>
+          <div className="flex-1 p-2.5 flex flex-col justify-center space-y-2 min-h-0">
+            {/* Total */}
+            <div className="flex items-center gap-2.5 p-2.5 rounded-lg bg-blue-50 dark:bg-blue-950/30 border border-blue-100 dark:border-blue-800/50">
+              <div className="p-1.5 rounded-md bg-blue-600 text-white"><MessageSquare className="w-3.5 h-3.5" /></div>
+              <div>
+                <p className="text-[8px] text-slate-500 dark:text-slate-400 font-medium">Total Pengaduan</p>
+                <p className="text-lg font-extrabold text-blue-900 dark:text-blue-300 leading-tight">{pengaduanData.total.toLocaleString('id-ID')}</p>
+              </div>
+            </div>
+            {/* Status */}
+            {[
+              { icon: CheckCircle2, label: 'Selesai', value: pengaduanData.selesai.toLocaleString('id-ID'), bg: 'bg-emerald-50 dark:bg-emerald-950/20 border-emerald-100 dark:border-emerald-800/40', iconColor: 'text-emerald-500', valueColor: 'text-emerald-700 dark:text-emerald-400' },
+              { icon: Clock, label: 'Proses', value: pengaduanData.proses, bg: 'bg-amber-50 dark:bg-amber-950/20 border-amber-100 dark:border-amber-800/40', iconColor: 'text-amber-500', valueColor: 'text-amber-700 dark:text-amber-400' },
+              { icon: AlertCircle, label: 'Belum Ditindaklanjuti', value: pengaduanData.belumDitindaklanjuti, bg: 'bg-red-50 dark:bg-red-950/20 border-red-100 dark:border-red-800/40', iconColor: 'text-red-500', valueColor: 'text-red-700 dark:text-red-400' },
+            ].map((s, i) => {
+              const Icon = s.icon;
+              return (
+                <div key={i} className={`flex items-center justify-between px-2.5 py-2 rounded-lg border ${s.bg}`}>
+                  <div className="flex items-center gap-1.5">
+                    <Icon className={`w-3 h-3 ${s.iconColor}`} />
+                    <span className="text-[10px] text-slate-700 dark:text-slate-300">{s.label}</span>
+                  </div>
+                  <span className={`text-sm font-extrabold ${s.valueColor}`}>{s.value}</span>
+                </div>
+              );
+            })}
+            <button onClick={() => onNavigate('home')} className="text-[10px] text-blue-600 dark:text-blue-400 font-semibold flex items-center gap-0.5 hover:text-blue-500 transition pt-0.5">
+              Lihat Detail <ChevronRight className="w-3 h-3" />
+            </button>
+          </div>
+        </div>
+      </div>
+
+      {/* ===== ROW 3: Harga Pangan + Inflasi + Berita ===== */}
+      <div className="flex-shrink-0 grid grid-cols-12 gap-2" style={{ height: '38%' }}>
+
+        {/* Harga Pangan (5 cols) */}
+        <div className="col-span-5 dashboard-card rounded-xl overflow-hidden flex flex-col">
+          <div className="flex-shrink-0 bg-gradient-to-r from-blue-900 to-blue-800 px-3 py-1.5 flex items-center justify-between">
+            <h3 className="text-[10px] font-bold text-white flex items-center gap-1.5">
+              <Target className="w-3 h-3" /> HARGA PANGAN HARI INI
+            </h3>
+            <span className="text-[8px] px-1.5 py-0.5 rounded-full bg-blue-700/80 text-blue-200 font-semibold border border-blue-600/50">Lihat Semua ↗</span>
+          </div>
+          <div className="flex-1 overflow-y-auto min-h-0">
+            <table className="w-full text-[10px]">
+              <thead className="sticky top-0">
+                <tr className="bg-slate-50 dark:bg-slate-800/80">
+                  <th className="text-left font-bold text-slate-500 dark:text-slate-400 px-2.5 py-1.5">Komoditas</th>
+                  <th className="text-right font-bold text-slate-500 dark:text-slate-400 px-2.5 py-1.5">Harga (Rp)</th>
+                  <th className="text-right font-bold text-slate-500 dark:text-slate-400 px-2.5 py-1.5">Perubahan</th>
+                </tr>
+              </thead>
+              <tbody>
+                {hargaPanganData.map((item, idx) => (
+                  <tr key={idx} className="border-t border-slate-100 dark:border-slate-800/50 hover:bg-slate-50/50 dark:hover:bg-slate-800/20">
+                    <td className="px-2.5 py-1.5 text-slate-700 dark:text-slate-300 flex items-center gap-1.5">
+                      <span className="text-xs">{item.icon}</span>{item.komoditas}
+                    </td>
+                    <td className="px-2.5 py-1.5 text-right font-bold text-slate-800 dark:text-slate-200">{fmt(item.harga)}</td>
+                    <td className="px-2.5 py-1.5 text-right font-bold">
+                      {item.perubahan === 0 ? (
+                        <span className="price-stable flex items-center justify-end gap-0.5"><Minus className="w-2.5 h-2.5" /> 0</span>
+                      ) : item.perubahan > 0 ? (
+                        <span className="price-up flex items-center justify-end gap-0.5"><ArrowUpRight className="w-2.5 h-2.5" /> +{fmt(item.perubahan)}</span>
+                      ) : (
+                        <span className="price-down flex items-center justify-end gap-0.5"><ArrowDownRight className="w-2.5 h-2.5" /> {fmt(item.perubahan)}</span>
+                      )}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        {/* Inflasi (3 cols) */}
+        <div className="col-span-3 dashboard-card rounded-xl overflow-hidden flex flex-col">
+          <div className="flex-shrink-0 bg-gradient-to-r from-blue-900 to-blue-800 px-3 py-1.5 flex items-center justify-between">
+            <h3 className="text-[10px] font-bold text-white flex items-center gap-1.5">
+              <TrendingUp className="w-3 h-3" /> INFLASI KAB. (y-on-y)
+            </h3>
+          </div>
+          <div className="flex-1 p-2.5 flex flex-col min-h-0">
+            <div className="flex items-baseline gap-2 mb-0.5">
+              <span className="text-2xl font-extrabold text-slate-900 dark:text-white tracking-tight">
+                {inflasiData.current.toFixed(2).replace('.', ',')}%
+              </span>
+              <span className="trend-badge bg-emerald-100 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-400">
+                <ArrowDownRight className="w-2.5 h-2.5" /> {inflasiData.change.toFixed(2).replace('.', ',')} poin
               </span>
             </div>
-
-            <div className="space-y-2">
-              {bmkgWeatherData.slice(0, 3).map((w, idx) => (
-                <div key={idx} className="p-2.5 rounded-xl bg-zinc-50 dark:bg-slate-900/80 border border-zinc-200 dark:border-slate-800 flex items-center justify-between text-xs">
-                  <div>
-                    <p className="font-semibold text-zinc-800 dark:text-slate-200">{w.wilayah}</p>
-                    <p className="text-[10px] text-zinc-500 dark:text-slate-400">{w.kondisi} • Kelembapan {w.kelembapan}</p>
-                  </div>
-                  <span className="text-sm font-extrabold text-amber-600 dark:text-amber-300">{w.suhu}</span>
-                </div>
-              ))}
+            <p className="text-[8px] text-slate-400 dark:text-slate-500 mb-1">{inflasiData.bulan} · {inflasiData.changePeriod}</p>
+            <div className="flex-1 min-h-0">
+              <ResponsiveContainer width="100%" height="100%">
+                <LineChart data={inflasiData.tren} margin={{ top: 5, right: 5, bottom: 0, left: -15 }}>
+                  <CartesianGrid strokeDasharray="3 3" stroke={darkMode ? "#334155" : "#e2e8f0"} opacity={0.5} />
+                  <XAxis dataKey="bulan" fontSize={8} stroke={darkMode ? "#94a3b8" : "#64748b"} tick={{ fontSize: 8 }} interval={0} />
+                  <YAxis fontSize={8} stroke={darkMode ? "#94a3b8" : "#64748b"} domain={[2, 3]} tickFormatter={(v) => `${v.toFixed(1)}%`} tick={{ fontSize: 8 }} />
+                  <Tooltip
+                    contentStyle={{ backgroundColor: darkMode ? '#0f172a' : '#fff', borderColor: darkMode ? '#334155' : '#e2e8f0', borderRadius: '6px', fontSize: '10px', color: darkMode ? '#fff' : '#1e293b' }}
+                    formatter={(v) => [`${v.toFixed(2)}%`, 'Inflasi']}
+                  />
+                  <Line type="monotone" dataKey="nilai" stroke="#3b82f6" strokeWidth={2} dot={{ r: 3, fill: '#3b82f6', stroke: '#fff', strokeWidth: 1.5 }} activeDot={{ r: 5, fill: '#1d4ed8' }} />
+                </LineChart>
+              </ResponsiveContainer>
             </div>
-
-            <button 
-              onClick={() => onNavigate('cuaca')}
-              className="w-full text-center text-xs text-cerulean-600 dark:text-emerald-400 hover:text-cerulean-500 font-medium py-1"
-            >
-              Lihat Cuaca 11 Kecamatan →
-            </button>
+            <p className="text-[7px] text-slate-400 italic mt-1 flex-shrink-0">Sumber: {inflasiData.sumber}</p>
           </div>
-
-          {/* Activity Feed */}
-          <div className="p-5 rounded-2xl glass-panel border border-zinc-200/50 dark:border-slate-800/80 space-y-3">
-            <h4 className="text-xs font-bold text-slate-800 dark:text-white flex items-center gap-2">
-              <Activity className="w-4 h-4 text-emerald-600 dark:text-emerald-400" /> Pembaruan Data Terkini
-            </h4>
-            <div className="space-y-2.5">
-              {recentActivities.map((act) => (
-                <div key={act.id} className="text-xs space-y-0.5 border-b border-zinc-200 dark:border-slate-800/60 pb-2 last:border-0 last:pb-0">
-                  <div className="flex items-center justify-between">
-                    <span className="font-bold text-cerulean-600 dark:text-emerald-400">{act.opd}</span>
-                    <span className="text-[10px] text-zinc-400 dark:text-slate-500">{act.waktu}</span>
-                  </div>
-                  <p className="text-zinc-600 dark:text-slate-300 text-[11px] leading-snug">{act.aksi}</p>
-                </div>
-              ))}
-            </div>
-          </div>
-
         </div>
 
-      </section>
+        {/* Berita (4 cols) */}
+        <div className="col-span-4 dashboard-card rounded-xl overflow-hidden flex flex-col">
+          <div className="flex-shrink-0 bg-gradient-to-r from-blue-900 to-blue-800 px-3 py-1.5">
+            <h3 className="text-[10px] font-bold text-white flex items-center gap-1.5">
+              <Newspaper className="w-3 h-3" /> BERITA & INFORMASI TERKINI
+            </h3>
+          </div>
+          <div className="flex-1 p-2 overflow-y-auto min-h-0 space-y-1.5">
+            {beritaTerkini.map((item) => (
+              <div key={item.id} className="flex gap-2.5 p-1.5 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800/30 cursor-pointer group transition">
+                <div className="w-16 h-12 rounded-md overflow-hidden flex-shrink-0">
+                  <img
+                    src={item.thumbnail}
+                    alt={item.judul}
+                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+                    onError={(e) => { e.target.onerror = null; e.target.src = `https://placehold.co/160x120/1e3a5f/ffffff?text=${item.id}`; }}
+                  />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <h4 className="text-[10px] font-bold text-slate-800 dark:text-slate-200 line-clamp-2 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition leading-tight">
+                    {item.judul}
+                  </h4>
+                  <p className="text-[8px] text-slate-400 dark:text-slate-500 mt-0.5">📅 {item.tanggal}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
 
+      {/* Footer */}
+      <div className="flex-shrink-0 text-center py-1">
+        <p className="text-[8px] text-slate-400 dark:text-slate-500">
+          © 2025 Diskominfo HST — Dashboard Kepala Daerah Kabupaten Hulu Sungai Tengah
+        </p>
+      </div>
     </div>
   );
 }

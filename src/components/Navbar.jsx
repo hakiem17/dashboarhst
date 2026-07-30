@@ -34,14 +34,15 @@ export default function Navbar({
     <header className="sticky top-0 z-40 w-full glass-panel border-b border-zinc-200/80 dark:border-slate-800/80 transition-colors duration-200">
       <div className="px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4">
         
-        {/* Left Side: Brand Logo & Mobile Toggle */}
+        {/* Left Side: Brand Logo & Sidebar Toggle */}
         <div className="flex items-center gap-3">
           <button 
             onClick={toggleSidebar}
-            className="p-2 rounded-lg text-zinc-500 dark:text-slate-400 hover:text-zinc-900 dark:hover:text-white hover:bg-zinc-100 dark:hover:bg-slate-800 transition lg:hidden"
+            className="p-2 rounded-lg text-zinc-500 dark:text-slate-400 hover:text-zinc-900 dark:hover:text-white hover:bg-zinc-100 dark:hover:bg-slate-800/70 transition"
             aria-label="Toggle Sidebar"
+            title={sidebarOpen ? "Sembunyikan Sidebar" : "Tampilkan Sidebar"}
           >
-            {sidebarOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+            {sidebarOpen ? <X className="w-5 h-5 text-slate-400" /> : <Menu className="w-5 h-5 text-emerald-500 dark:text-emerald-400" />}
           </button>
 
           <div className="flex items-center gap-3">

@@ -572,3 +572,168 @@ export const recentActivities = [
     badge: "Keuangan APBD"
   }
 ];
+
+// Data Pengaduan Masyarakat
+export const pengaduanData = {
+  total: 1248,
+  selesai: 1012,
+  proses: 168,
+  belumDitindaklanjuti: 68
+};
+
+// Data Harga Pangan Hari Ini
+export const hargaPanganData = [
+  { komoditas: 'Beras Medium (kg)', harga: 14500, perubahan: -100, icon: '🌾' },
+  { komoditas: 'Beras Premium (kg)', harga: 16500, perubahan: +100, icon: '🌾' },
+  { komoditas: 'Gula Pasir (kg)', harga: 17000, perubahan: 0, icon: '🍬' },
+  { komoditas: 'Minyak Goreng (L)', harga: 19000, perubahan: -500, icon: '🫗' },
+  { komoditas: 'Daging Ayam (kg)', harga: 38000, perubahan: -500, icon: '🍗' },
+  { komoditas: 'Daging Sapi (kg)', harga: 140000, perubahan: -1000, icon: '🥩' },
+  { komoditas: 'Telur Ayam (kg)', harga: 28000, perubahan: 0, icon: '🥚' },
+  { komoditas: 'Cabai Merah (kg)', harga: 45000, perubahan: +1000, icon: '🌶️' },
+];
+
+// Data Inflasi Kabupaten (y-on-y)
+export const inflasiData = {
+  current: 2.23,
+  change: -0.18,
+  changePeriod: 'dibanding Maret 2025',
+  bulan: 'April 2025',
+  sumber: 'BPS Kab. HST',
+  tren: [
+    { bulan: 'Des 2024', nilai: 2.71 },
+    { bulan: 'Jan 2025', nilai: 2.54 },
+    { bulan: 'Feb 2025', nilai: 2.48 },
+    { bulan: 'Mar 2025', nilai: 2.41 },
+    { bulan: 'Apr 2025', nilai: 2.23 },
+  ]
+};
+
+// Data Berita & Informasi Terkini
+export const beritaTerkini = [
+  {
+    id: 1,
+    judul: 'Capaian Kinerja Pemkab HST Triwulan I Tahun 2025',
+    tanggal: '27 Mei 2025',
+    thumbnail: 'https://images.unsplash.com/photo-1554469384-e58fac16e23a?auto=format&fit=crop&w=400&q=80',
+  },
+  {
+    id: 2,
+    judul: 'Rapat Koordinasi Pengendalian Inflasi Daerah',
+    tanggal: '26 Mei 2025',
+    thumbnail: 'https://images.unsplash.com/photo-1573164713714-d95e436ab8d6?auto=format&fit=crop&w=400&q=80',
+  },
+  {
+    id: 3,
+    judul: 'HST Raih Predikat Informatif dalam KIP 2025',
+    tanggal: '24 Mei 2025',
+    thumbnail: 'https://images.unsplash.com/photo-1560472355-536de3962603?auto=format&fit=crop&w=400&q=80',
+  },
+  {
+    id: 4,
+    judul: 'Pendampingan Open Data Sektoral OPD',
+    tanggal: '22 Mei 2025',
+    thumbnail: 'https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?auto=format&fit=crop&w=400&q=80',
+  }
+];
+
+// Data Penduduk per Kecamatan (untuk peta)
+export const pendudukKecamatan = [
+  { nama: 'Kec. Batang Alai Utara', jumlah: '24.317 Jiwa' },
+  { nama: 'Kec. Labuan Amas Utara', jumlah: '25.186 Jiwa' },
+  { nama: 'Kec. Labuan Amas Selatan', jumlah: '34.671 Jiwa' },
+  { nama: 'Kec. Barabai', jumlah: '78.892 Jiwa' },
+  { nama: 'Kec. Pandawan', jumlah: '37.954 Jiwa' },
+  { nama: 'Kec. Batu Benawa', jumlah: '62.227 Jiwa' },
+];
+
+export const totalPenduduk = {
+  total: '263.247 Jiwa',
+  lakiLaki: '133.379',
+  perempuan: '129.868',
+  sumber: 'Dukcapil HST'
+};
+
+// Indikator Makro (8 cards)
+export const indikatorMakro = [
+  {
+    no: 1,
+    label: 'LAJU PERTUMBUHAN EKONOMI (%)',
+    value: '5,00',
+    target: 'Target 2025: 5,00',
+    prefix: '',
+    color: '#1e40af',
+    trend: 'up'
+  },
+  {
+    no: 2,
+    label: 'PDRB PER KAPITA (Rp Juta)',
+    value: '35,90',
+    target: 'Target 2025: 35,00',
+    prefix: 'Rp',
+    color: '#0369a1',
+    trend: 'up'
+  },
+  {
+    no: 3,
+    label: 'TINGKAT KEMISKINAN (%)',
+    value: '5,43',
+    target: 'Target 2025: 5,43',
+    prefix: '',
+    color: '#0e7490',
+    trend: 'down-good'
+  },
+  {
+    no: 4,
+    label: 'RASIO GINI (Indeks)',
+    value: '0,216',
+    target: 'Target 2025: 0,216',
+    prefix: '',
+    color: '#0f766e',
+    trend: 'stable'
+  },
+  {
+    no: 5,
+    label: 'INDEKS PEMBANGUNAN MANUSIA (IPM)',
+    value: '73,80',
+    target: 'Target 2025: 73,80',
+    prefix: '',
+    color: '#15803d',
+    trend: 'up'
+  },
+  {
+    no: 6,
+    label: 'PENURUNAN INTENSITAS EMISI GRK (%)',
+    value: '1,46',
+    target: 'Target 2025: 1,46',
+    prefix: '',
+    color: '#a16207',
+    trend: 'up'
+  },
+  {
+    no: 7,
+    label: 'INDEKS KUALITAS LINGKUNGAN HIDUP (IKLH)',
+    value: '72,00',
+    target: 'Target 2025: 72,00',
+    prefix: '',
+    color: '#b45309',
+    trend: 'up'
+  },
+  {
+    no: 8,
+    label: 'TINGKAT PENGANGGURAN TERBUKA (%)',
+    value: '3,04',
+    target: 'Target 2025: 3,04',
+    prefix: '',
+    color: '#9a3412',
+    trend: 'down-good'
+  }
+];
+
+// Realisasi APBD 2025
+export const realisasiApbd = {
+  totalAnggaran: 'Rp 2,15 T',
+  realisasi: 'Rp 1,00 T',
+  persenRealisasi: 46.72,
+  sisaAnggaran: 'Rp 1,15 T'
+};

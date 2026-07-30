@@ -15,6 +15,7 @@ import {
   ChevronDown,
   ChevronUp,
   ChevronRight,
+  ChevronLeft,
   ShieldCheck,
   ShoppingBag
 } from 'lucide-react';
@@ -104,122 +105,130 @@ export default function Sidebar({ activeTab, setActiveTab, sidebarOpen, setSideb
 
       {/* Sidebar Container */}
       <aside className={`
-        fixed lg:static top-16 left-0 h-[calc(100vh-4rem)] w-64 bg-slate-950/95 border-r border-slate-800/80 z-30 flex flex-col transition-all duration-300 transform shrink-0
-        ${sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
+        fixed lg:static top-16 left-0 h-[calc(100vh-4rem)] bg-slate-950/95 z-30 transition-all duration-300 shrink-0 overflow-hidden
+        ${sidebarOpen 
+          ? 'w-64 opacity-100 border-r border-slate-800/80 translate-x-0' 
+          : 'w-0 opacity-0 border-none -translate-x-full lg:translate-x-0 pointer-events-none'}
       `}>
-        
-        {/* Menu Label */}
-        <div className="px-5 pt-4 pb-2">
-          <p className="text-[10px] font-bold tracking-wider text-slate-500 uppercase">
-            Menu Utama Dashboard HST
-          </p>
-        </div>
+        <div className="w-64 flex flex-col h-full">
+          {/* Menu Label & Collapse Toggle */}
+          <div className="px-4 pt-3 pb-2 flex items-center justify-between">
+            <p className="text-[10px] font-bold tracking-wider text-slate-500 uppercase">
+              Menu Utama Dashboard HST
+            </p>
+            <button
+              onClick={() => setSidebarOpen(false)}
+              className="p-1 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition"
+              title="Sembunyikan Sidebar"
+            >
+              <ChevronLeft className="w-4 h-4" />
+            </button>
+          </div>
 
-        {/* Scrollable Navigation */}
-        <nav className="flex-1 px-3 space-y-1 overflow-y-auto py-2">
-          {menuItems.map((item) => {
-            const Icon = item.icon;
+          {/* Scrollable Navigation */}
+          <nav className="flex-1 px-3 space-y-1 overflow-y-auto py-2">
+            {menuItems.map((item) => {
+              const Icon = item.icon;
 
-            if (item.type === 'link') {
-              const isActive = activeTab === item.id;
-              return (
-                <button
-                  key={item.id}
-                  onClick={() => {
-                    setActiveTab(item.id);
-                    setSidebarOpen(false);
-                  }}
-                  className={`
-                    w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-semibold transition-all duration-200 group
-                    ${isActive 
-                      ? 'bg-gradient-to-r from-emerald-600 to-teal-700 text-white shadow-lg shadow-emerald-950/50' 
-                      : 'text-slate-400 hover:text-slate-100 hover:bg-slate-900/80'}
-                  `}
-                >
-                  <div className="flex items-center gap-3">
-                    <Icon className={`w-4 h-4 transition ${isActive ? 'text-white' : 'text-slate-400 group-hover:text-emerald-400'}`} />
-                    <span>{item.label}</span>
-                  </div>
-
-                  {item.badge ? (
-                    <span className={`
-                      text-[9px] font-bold px-1.5 py-0.5 rounded-full uppercase tracking-wider border
-                      ${isActive 
-                        ? 'bg-white/20 text-white border-white/30' 
-                        : 'bg-emerald-950/80 text-emerald-300 border-emerald-500/30'}
-                    `}>
-                      {item.badge}
-                    </span>
-                  ) : (
-                    <ChevronRight className={`w-3.5 h-3.5 opacity-0 group-hover:opacity-100 transition ${isActive ? 'opacity-100 text-white' : 'text-slate-500'}`} />
-                  )}
-                </button>
-              );
-            }
-
-            // Parent collapsible menu
-            if (item.type === 'parent') {
-              const isSubActive = item.subItems.some(sub => sub.id === activeTab);
-              return (
-                <div key={item.id} className="space-y-1">
+              if (item.type === 'link') {
+                const isActive = activeTab === item.id;
+                return (
                   <button
-                    onClick={() => item.setOpen(!item.isOpen)}
+                    key={item.id}
+                    onClick={() => {
+                      setActiveTab(item.id);
+                    }}
                     className={`
-                      w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-semibold transition-all duration-200
-                      ${isSubActive ? 'text-white bg-slate-900/40' : 'text-slate-400 hover:text-slate-100 hover:bg-slate-900/80'}
+                      w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-semibold transition-all duration-200 group
+                      ${isActive 
+                        ? 'bg-gradient-to-r from-emerald-600 to-teal-700 text-white shadow-lg shadow-emerald-950/50' 
+                        : 'text-slate-400 hover:text-slate-100 hover:bg-slate-900/80'}
                     `}
                   >
                     <div className="flex items-center gap-3">
-                      <Icon className={`w-4 h-4 ${isSubActive ? 'text-emerald-400' : 'text-slate-400'}`} />
+                      <Icon className={`w-4 h-4 transition ${isActive ? 'text-white' : 'text-slate-400 group-hover:text-emerald-400'}`} />
                       <span>{item.label}</span>
                     </div>
-                    {item.isOpen ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}
+
+                    {item.badge ? (
+                      <span className={`
+                        text-[9px] font-bold px-1.5 py-0.5 rounded-full uppercase tracking-wider border
+                        ${isActive 
+                          ? 'bg-white/20 text-white border-white/30' 
+                          : 'bg-emerald-950/80 text-emerald-300 border-emerald-500/30'}
+                      `}>
+                        {item.badge}
+                      </span>
+                    ) : (
+                      <ChevronRight className={`w-3.5 h-3.5 opacity-0 group-hover:opacity-100 transition ${isActive ? 'opacity-100 text-white' : 'text-slate-500'}`} />
+                    )}
                   </button>
+                );
+              }
 
-                  {/* Submenu Items */}
-                  {item.isOpen && (
-                    <div className="pl-9 space-y-1 transition duration-200">
-                      {item.subItems.map((sub) => {
-                        const isSelected = activeTab === sub.id;
-                        return (
-                          <button
-                            key={sub.id}
-                            onClick={() => {
-                              setActiveTab(sub.id);
-                              setSidebarOpen(false);
-                            }}
-                            className={`
-                              w-full text-left px-3 py-2 rounded-lg text-xs font-medium transition-all duration-200
-                              ${isSelected 
-                                ? 'bg-gradient-to-r from-emerald-600 to-teal-700 text-white font-bold shadow' 
-                                : 'text-slate-400 hover:text-slate-200 hover:bg-slate-900/50'}
-                            `}
-                          >
-                            {sub.label}
-                          </button>
-                        );
-                      })}
-                    </div>
-                  )}
-                </div>
-              );
-            }
+              // Parent collapsible menu
+              if (item.type === 'parent') {
+                const isSubActive = item.subItems.some(sub => sub.id === activeTab);
+                return (
+                  <div key={item.id} className="space-y-1">
+                    <button
+                      onClick={() => item.setOpen(!item.isOpen)}
+                      className={`
+                        w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-semibold transition-all duration-200
+                        ${isSubActive ? 'text-white bg-slate-900/40' : 'text-slate-400 hover:text-slate-100 hover:bg-slate-900/80'}
+                      `}
+                    >
+                      <div className="flex items-center gap-3">
+                        <Icon className={`w-4 h-4 ${isSubActive ? 'text-emerald-400' : 'text-slate-400'}`} />
+                        <span>{item.label}</span>
+                      </div>
+                      {item.isOpen ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}
+                    </button>
 
-            return null;
-          })}
-        </nav>
+                    {/* Submenu Items */}
+                    {item.isOpen && (
+                      <div className="pl-9 space-y-1 transition duration-200">
+                        {item.subItems.map((sub) => {
+                          const isSelected = activeTab === sub.id;
+                          return (
+                            <button
+                              key={sub.id}
+                              onClick={() => {
+                                setActiveTab(sub.id);
+                              }}
+                              className={`
+                                w-full text-left px-3 py-2 rounded-lg text-xs font-medium transition-all duration-200
+                                ${isSelected 
+                                  ? 'bg-gradient-to-r from-emerald-600 to-teal-700 text-white font-bold shadow' 
+                                  : 'text-slate-400 hover:text-slate-200 hover:bg-slate-900/50'}
+                              `}
+                            >
+                              {sub.label}
+                            </button>
+                          );
+                        })}
+                      </div>
+                    )}
+                  </div>
+                );
+              }
 
-        {/* Footer Widget inside Sidebar */}
-        <div className="p-4 m-3 rounded-2xl bg-gradient-to-br from-emerald-950/60 to-slate-900 border border-emerald-500/20 text-center shrink-0">
-          <div className="flex items-center justify-center w-8 h-8 rounded-full bg-emerald-500/20 border border-emerald-500/30 text-emerald-400 mx-auto mb-2 shadow-glow-green">
-            <ShieldCheck className="w-4 h-4" />
-          </div>
-          <h5 className="text-xs font-bold text-slate-200">Satu Data Indonesia</h5>
-          <p className="text-[10px] text-slate-400 mt-0.5">
-            Bappeda Litbang & Diskominfo HST
-          </p>
-          <div className="mt-2 text-[10px] text-emerald-400 font-semibold bg-emerald-950/80 py-1 px-2 rounded-lg border border-emerald-800/40">
-            #HST_MURAKATA
+              return null;
+            })}
+          </nav>
+
+          {/* Footer Widget inside Sidebar */}
+          <div className="p-4 m-3 rounded-2xl bg-gradient-to-br from-emerald-950/60 to-slate-900 border border-emerald-500/20 text-center shrink-0">
+            <div className="flex items-center justify-center w-8 h-8 rounded-full bg-emerald-500/20 border border-emerald-500/30 text-emerald-400 mx-auto mb-2 shadow-glow-green">
+              <ShieldCheck className="w-4 h-4" />
+            </div>
+            <h5 className="text-xs font-bold text-slate-200">Satu Data Indonesia</h5>
+            <p className="text-[10px] text-slate-400 mt-0.5">
+              Bappeda Litbang & Diskominfo HST
+            </p>
+            <div className="mt-2 text-[10px] text-emerald-400 font-semibold bg-emerald-950/80 py-1 px-2 rounded-lg border border-emerald-800/40">
+              #HST_MURAKATA
+            </div>
           </div>
         </div>
 
@@ -227,3 +236,4 @@ export default function Sidebar({ activeTab, setActiveTab, sidebarOpen, setSideb
     </>
   );
 }
+

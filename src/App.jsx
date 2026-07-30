@@ -21,7 +21,7 @@ export default function App() {
   const [darkMode, setDarkMode] = useState(true);
   const [activeYear, setActiveYear] = useState('2026');
   const [isAiOpen, setIsAiOpen] = useState(false);
-  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [sidebarOpen, setSidebarOpen] = useState(true);
 
   useEffect(() => {
     if (darkMode) {
@@ -95,7 +95,11 @@ export default function App() {
         />
 
         {/* Dynamic Content View Area */}
-        <main className="flex-1 p-4 sm:p-6 lg:p-8 overflow-y-auto max-w-7xl mx-auto w-full">
+        <main className={`flex-1 overflow-y-auto w-full ${
+          activeTab === 'home' 
+            ? 'p-2 sm:p-3 overflow-hidden' 
+            : 'p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto'
+        }`}>
           {renderActiveView()}
         </main>
 
