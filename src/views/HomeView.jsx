@@ -380,7 +380,7 @@ export default function HomeView({ onNavigate, onOpenAiCopilot, darkMode }) {
           </div>
 
           {/* Pengaduan Masyarakat */}
-          <div className="flex-1 dashboard-card rounded-xl overflow-hidden flex flex-col min-h-0">
+          <div onClick={() => onNavigate('112')} className="flex-1 dashboard-card rounded-xl overflow-hidden flex flex-col min-h-0 cursor-pointer group hover:border-blue-500/50 transition">
             <div className="flex-shrink-0 bg-gradient-to-r from-blue-900 to-blue-800 px-3 py-1.5">
               <h3 className="text-[10px] font-bold text-white flex items-center gap-1.5">
                 <MessageSquare className="w-3 h-3" /> PENGADUAN MASYARAKAT
@@ -653,7 +653,7 @@ export default function HomeView({ onNavigate, onOpenAiCopilot, darkMode }) {
           </div>
 
           {/* Harga Pangan Hari Ini */}
-          <div className="flex-1 dashboard-card rounded-xl overflow-hidden flex flex-col min-h-0">
+          <div onClick={() => onNavigate('tpid-harga')} className="flex-1 dashboard-card rounded-xl overflow-hidden flex flex-col min-h-0 cursor-pointer group hover:border-amber-500/50 transition">
             <div className="flex-shrink-0 bg-gradient-to-r from-blue-900 to-blue-800 px-3 py-1.5 flex items-center justify-between">
               <h3 className="text-[10px] font-bold text-white flex items-center gap-1.5">
                 <Target className="w-3 h-3" /> HARGA PANGAN HARI INI

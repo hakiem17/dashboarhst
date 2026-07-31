@@ -17,7 +17,9 @@ import {
   ChevronRight,
   ChevronLeft,
   ShieldCheck,
-  ShoppingBag
+  ShoppingBag,
+  MessageSquare,
+  Landmark
 } from 'lucide-react';
 
 export default function Sidebar({ activeTab, setActiveTab, sidebarOpen, setSidebarOpen }) {
@@ -91,6 +93,9 @@ export default function Sidebar({ activeTab, setActiveTab, sidebarOpen, setSideb
       ]
     },
 
+    { id: 'ewalidata', label: 'e-Walidata SDI', icon: Database, type: 'link' },
+    { id: 'investasi', label: 'Investasi Daerah', icon: Landmark, type: 'link' },
+    { id: '112', label: 'Pengaduan & 112', icon: PhoneCall, type: 'link', badge: 'Live' },
     { id: 'dokumen', label: 'Dokumen Publikasi', icon: FileText, type: 'link' }
   ];
 
