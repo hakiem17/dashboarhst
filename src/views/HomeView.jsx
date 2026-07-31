@@ -172,7 +172,7 @@ export default function HomeView({ onNavigate, onOpenAiCopilot, darkMode }) {
         {misiBupatiData.map((misi) => (
           <div 
             key={misi.id}
-            onClick={() => onNavigate('misi-bupati')}
+            onClick={() => onNavigate(`misi-${misi.id}`)}
             className={`dashboard-card rounded-xl p-2 cursor-pointer group border ${misi.borderColor} hover:border-emerald-500/50 transition flex flex-col justify-between relative overflow-hidden`}
           >
             <div>

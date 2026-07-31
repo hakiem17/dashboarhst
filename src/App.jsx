@@ -15,6 +15,10 @@ import DokumenView from './views/DokumenView';
 import AiCopilotModal from './components/AiCopilotModal';
 import DtsenView from './views/DtsenView';
 import TpidView from './views/TpidView';
+import Misi1View from './views/Misi1View';
+import Misi2View from './views/Misi2View';
+import Misi3View from './views/Misi3View';
+import Misi4View from './views/Misi4View';
 
 export default function App() {
   const [activeTab, setActiveTab] = useState('home');
@@ -41,6 +45,14 @@ export default function App() {
         return <PetaAdministrasiView />;
       case 'ewalidata':
         return <EWalidataView />;
+      case 'misi-1':
+        return <Misi1View darkMode={darkMode} onNavigate={setActiveTab} />;
+      case 'misi-2':
+        return <Misi2View darkMode={darkMode} onNavigate={setActiveTab} />;
+      case 'misi-3':
+        return <Misi3View darkMode={darkMode} onNavigate={setActiveTab} />;
+      case 'misi-4':
+        return <Misi4View darkMode={darkMode} onNavigate={setActiveTab} />;
       case 'misi-bupati':
       case 'strategis':
         return <DataStrategisView darkMode={darkMode} />;
