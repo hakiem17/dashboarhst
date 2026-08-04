@@ -94,6 +94,7 @@ export default function App() {
         onOpenAiCopilot={() => setIsAiOpen(true)}
         toggleSidebar={() => setSidebarOpen(!sidebarOpen)}
         sidebarOpen={sidebarOpen}
+        onGoHome={() => setActiveTab('home')}
       />
 
       {/* Main Body Layout */}

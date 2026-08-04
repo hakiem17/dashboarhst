@@ -43,10 +43,10 @@ export default function Sidebar({ activeTab, setActiveTab, sidebarOpen, setSideb
       setOpen: setStrategisOpen,
       subItems: [
         { id: 'misi-bupati', label: 'Visi & 4 Misi Strategis' },
-        { id: 'misi-1', label: 'Misi 1 — Sosial & SDM' },
-        { id: 'misi-2', label: 'Misi 2 — Ekonomi & Pertanian' },
-        { id: 'misi-3', label: 'Misi 3 — Infrastruktur & IKLH' },
-        { id: 'misi-4', label: 'Misi 4 — Tata Kelola & SPBE' },
+        { id: 'misi-1', label: 'Misi 1 — Perubahan Sosial Masyarakat' },
+        { id: 'misi-2', label: 'Misi 2 — Perubahan Perekonomian Daerah' },
+        { id: 'misi-3', label: 'Misi 3 — Infrastruktur Pelayanan Publik' },
+        { id: 'misi-4', label: 'Misi 4 — Tata Kelola Pemerintahan' },
         { id: 'strategis', label: 'Indikator Makro' },
         { id: 'inpres', label: 'Pelaporan INPRES 8 (DTSEN)' }
       ]

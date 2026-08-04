@@ -221,48 +221,30 @@ export default function HomeView({ onNavigate, onOpenAiCopilot, darkMode }) {
               </span>
             </div>
 
-            {/* Content: Full-Height Graphical Visualizations (3 Donut Pie Charts + BarChart + Summary KPIs) */}
+            {/* Content: Pie Charts Only (Pendapatan & Belanja) */}
             <div 
               onClick={() => onNavigate('apbd-belanja')}
-              className="flex-1 p-2 flex flex-col justify-between min-h-0 cursor-pointer space-y-2"
+              className="flex-1 p-2.5 flex flex-col justify-between min-h-0 cursor-pointer space-y-2"
             >
-              {/* 3 Donut Pie Charts (APBD, Pendapatan, Belanja) */}
-              <div className="grid grid-cols-3 gap-1.5 flex-shrink-0">
-                {/* Donut 1: APBD */}
-                <div className="flex flex-col items-center bg-blue-50/70 dark:bg-blue-950/30 p-1 rounded-lg border border-blue-100 dark:border-blue-900/40">
-                  <div className="w-[60px] h-[60px] relative flex items-center justify-center">
-                    <ResponsiveContainer width="100%" height="100%">
-                      <PieChart>
-                        <Pie
-                          data={[
-                            { name: 'Realisasi', value: realisasiApbd.persenRealisasi },
-                            { name: 'Sisa', value: 100 - realisasiApbd.persenRealisasi }
-                          ]}
-                          cx="50%"
-                          cy="50%"
-                          innerRadius={18}
-                          outerRadius={26}
-                          startAngle={90}
-                          endAngle={-270}
-                          dataKey="value"
-                          stroke="none"
-                        >
-                          <Cell fill="#2563eb" />
-                          <Cell fill={darkMode ? '#334155' : '#cbd5e1'} />
-                        </Pie>
-                      </PieChart>
-                    </ResponsiveContainer>
-                    <span className="absolute text-[9px] font-black text-blue-700 dark:text-blue-300">
-                      {realisasiApbd.persenRealisasi}%
-                    </span>
-                  </div>
-                  <span className="text-[8px] font-bold text-blue-900 dark:text-blue-200 mt-0.5">APBD</span>
-                  <span className="text-[7px] text-slate-500 dark:text-slate-400 font-semibold">{realisasiApbd.realisasi} / {realisasiApbd.totalAnggaran}</span>
+              {/* Total APBD Postur Banner */}
+              <div className="flex items-center justify-between px-2.5 py-1.5 bg-blue-50/80 dark:bg-blue-950/40 rounded-xl border border-blue-200/60 dark:border-blue-900/50 flex-shrink-0">
+                <div className="flex items-center gap-1.5">
+                  <span className="w-2 h-2 rounded-full bg-blue-500 animate-pulse"></span>
+                  <span className="text-[9px] font-bold text-slate-700 dark:text-slate-200">Total Postur APBD:</span>
+                  <span className="text-[10px] font-black text-blue-700 dark:text-blue-300">{realisasiApbd.totalAnggaran}</span>
                 </div>
+                <div className="text-[9px] font-semibold text-slate-600 dark:text-slate-300">
+                  Realisasi: <span className="font-bold text-blue-600 dark:text-blue-400">{realisasiApbd.realisasi}</span> <span className="text-[8.5px] px-1 py-0.5 rounded bg-blue-100 dark:bg-blue-900/60 text-blue-700 dark:text-blue-300 font-bold ml-0.5">{realisasiApbd.persenRealisasi}%</span>
+                </div>
+              </div>
 
-                {/* Donut 2: Pendapatan */}
-                <div className="flex flex-col items-center bg-emerald-50/70 dark:bg-emerald-950/30 p-1 rounded-lg border border-emerald-100 dark:border-emerald-900/40">
-                  <div className="w-[60px] h-[60px] relative flex items-center justify-center">
+              {/* 2 Donut Pie Charts (Pendapatan & Belanja) */}
+              <div className="grid grid-cols-2 gap-2 flex-1 items-center min-h-0">
+                
+                {/* Donut 1: Pendapatan */}
+                <div className="h-full flex flex-col items-center justify-between bg-emerald-50/70 dark:bg-emerald-950/30 p-2 rounded-xl border border-emerald-100 dark:border-emerald-900/40 hover:border-emerald-500/50 transition">
+                  <span className="text-[10px] font-bold text-emerald-900 dark:text-emerald-200">Realisasi Pendapatan</span>
+                  <div className="w-[80px] h-[80px] my-1 relative flex items-center justify-center">
                     <ResponsiveContainer width="100%" height="100%">
                       <PieChart>
                         <Pie
@@ -272,29 +254,32 @@ export default function HomeView({ onNavigate, onOpenAiCopilot, darkMode }) {
                           ]}
                           cx="50%"
                           cy="50%"
-                          innerRadius={18}
-                          outerRadius={26}
+                          innerRadius={24}
+                          outerRadius={36}
                           startAngle={90}
                           endAngle={-270}
                           dataKey="value"
                           stroke="none"
                         >
                           <Cell fill="#10b981" />
-                          <Cell fill={darkMode ? '#334155' : '#cbd5e1'} />
+                          <Cell fill={darkMode ? '#1e293b' : '#cbd5e1'} />
                         </Pie>
                       </PieChart>
                     </ResponsiveContainer>
-                    <span className="absolute text-[9px] font-black text-emerald-700 dark:text-emerald-300">
+                    <span className="absolute text-xs font-black text-emerald-700 dark:text-emerald-300">
                       {realisasiApbd.pendapatan.persen}%
                     </span>
                   </div>
-                  <span className="text-[8px] font-bold text-emerald-900 dark:text-emerald-200 mt-0.5">Pendapatan</span>
-                  <span className="text-[7px] text-slate-500 dark:text-slate-400 font-semibold">{realisasiApbd.pendapatan.realisasi} / {realisasiApbd.pendapatan.target}</span>
+                  <div className="text-center">
+                    <p className="text-[8.5px] text-slate-500 dark:text-slate-400 font-medium">Realisasi / Target</p>
+                    <p className="text-[9.5px] font-extrabold text-emerald-600 dark:text-emerald-400">{realisasiApbd.pendapatan.realisasi} <span className="text-slate-400 font-normal">/ {realisasiApbd.pendapatan.target}</span></p>
+                  </div>
                 </div>
 
-                {/* Donut 3: Belanja */}
-                <div className="flex flex-col items-center bg-indigo-50/70 dark:bg-indigo-950/30 p-1 rounded-lg border border-indigo-100 dark:border-indigo-900/40">
-                  <div className="w-[60px] h-[60px] relative flex items-center justify-center">
+                {/* Donut 2: Belanja */}
+                <div className="h-full flex flex-col items-center justify-between bg-indigo-50/70 dark:bg-indigo-950/30 p-2 rounded-xl border border-indigo-100 dark:border-indigo-900/40 hover:border-indigo-500/50 transition">
+                  <span className="text-[10px] font-bold text-indigo-900 dark:text-indigo-200">Realisasi Belanja</span>
+                  <div className="w-[80px] h-[80px] my-1 relative flex items-center justify-center">
                     <ResponsiveContainer width="100%" height="100%">
                       <PieChart>
                         <Pie
@@ -304,74 +289,38 @@ export default function HomeView({ onNavigate, onOpenAiCopilot, darkMode }) {
                           ]}
                           cx="50%"
                           cy="50%"
-                          innerRadius={18}
-                          outerRadius={26}
+                          innerRadius={24}
+                          outerRadius={36}
                           startAngle={90}
                           endAngle={-270}
                           dataKey="value"
                           stroke="none"
                         >
                           <Cell fill="#6366f1" />
-                          <Cell fill={darkMode ? '#334155' : '#cbd5e1'} />
+                          <Cell fill={darkMode ? '#1e293b' : '#cbd5e1'} />
                         </Pie>
                       </PieChart>
                     </ResponsiveContainer>
-                    <span className="absolute text-[9px] font-black text-indigo-700 dark:text-indigo-300">
+                    <span className="absolute text-xs font-black text-indigo-700 dark:text-indigo-300">
                       {realisasiApbd.belanja.persen}%
                     </span>
                   </div>
-                  <span className="text-[8px] font-bold text-indigo-900 dark:text-indigo-200 mt-0.5">Belanja</span>
-                  <span className="text-[7px] text-slate-500 dark:text-slate-400 font-semibold">{realisasiApbd.belanja.realisasi} / {realisasiApbd.belanja.pagu}</span>
-                </div>
-              </div>
-
-              {/* Bar Chart Anggaran vs Realisasi */}
-              <div className="flex-1 w-full bg-slate-50 dark:bg-slate-900/60 p-1.5 rounded-lg border border-slate-200/60 dark:border-slate-800 flex flex-col justify-between min-h-[90px]">
-                <div className="flex items-center justify-between text-[8px] font-bold px-1 mb-1">
-                  <span className="text-slate-700 dark:text-slate-300">Komparasi Target vs Realisasi (Rp Triliun)</span>
-                  <div className="flex items-center gap-2">
-                    <span className="flex items-center gap-1"><span className="w-1.5 h-1.5 rounded-sm bg-slate-400"></span> Target</span>
-                    <span className="flex items-center gap-1"><span className="w-1.5 h-1.5 rounded-sm bg-blue-600"></span> Realisasi</span>
+                  <div className="text-center">
+                    <p className="text-[8.5px] text-slate-500 dark:text-slate-400 font-medium">Realisasi / Pagu</p>
+                    <p className="text-[9.5px] font-extrabold text-indigo-600 dark:text-indigo-400">{realisasiApbd.belanja.realisasi} <span className="text-slate-400 font-normal">/ {realisasiApbd.belanja.pagu}</span></p>
                   </div>
                 </div>
-                <div className="flex-1 w-full min-h-0">
-                  <ResponsiveContainer width="100%" height="100%">
-                    <BarChart
-                      data={[
-                        { name: 'APBD Total', Target: 2.15, Realisasi: 1.00 },
-                        { name: 'Pendapatan', Target: 2.10, Realisasi: 1.12 },
-                        { name: 'Belanja', Target: 2.15, Realisasi: 1.00 },
-                      ]}
-                      margin={{ top: 2, right: 5, left: -25, bottom: 0 }}
-                      barGap={4}
-                    >
-                      <CartesianGrid strokeDasharray="3 3" vertical={false} stroke={darkMode ? '#334155' : '#cbd5e1'} opacity={0.4} />
-                      <XAxis dataKey="name" tick={{ fontSize: 8, fill: darkMode ? '#94a3b8' : '#475569' }} axisLine={false} tickLine={false} />
-                      <YAxis tick={{ fontSize: 7, fill: darkMode ? '#94a3b8' : '#475569' }} axisLine={false} tickLine={false} domain={[0, 2.5]} />
-                      <Tooltip 
-                        contentStyle={{ 
-                          backgroundColor: darkMode ? '#0f172a' : '#ffffff', 
-                          borderColor: darkMode ? '#334155' : '#cbd5e1', 
-                          fontSize: '9px',
-                          borderRadius: '6px'
-                        }}
-                        formatter={(val) => [`Rp ${val} T`, '']}
-                      />
-                      <Bar dataKey="Target" fill="#94a3b8" radius={[3, 3, 0, 0]} barSize={12} />
-                      <Bar dataKey="Realisasi" fill="#2563eb" radius={[3, 3, 0, 0]} barSize={12} />
-                    </BarChart>
-                  </ResponsiveContainer>
-                </div>
+
               </div>
 
-              {/* Breakdown Cards Footer (No blank spaces) */}
-              <div className="grid grid-cols-2 gap-1 text-[8px] flex-shrink-0">
-                <div className="p-1 rounded bg-slate-100 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-800 flex justify-between items-center">
-                  <span className="text-slate-500">PAD / Transfer:</span>
+              {/* Summary KPIs Footer */}
+              <div className="grid grid-cols-2 gap-1.5 text-[8.5px] flex-shrink-0">
+                <div className="p-1.5 rounded-lg bg-emerald-50 dark:bg-emerald-950/20 border border-emerald-200/50 dark:border-emerald-900/30 flex justify-between items-center">
+                  <span className="text-slate-500 dark:text-slate-400 font-medium">PAD / Transfer:</span>
                   <span className="font-bold text-emerald-600 dark:text-emerald-400">{realisasiApbd.pendapatan.pad}</span>
                 </div>
-                <div className="p-1 rounded bg-slate-100 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-800 flex justify-between items-center">
-                  <span className="text-slate-500">Belanja Operasi:</span>
+                <div className="p-1.5 rounded-lg bg-indigo-50 dark:bg-indigo-950/20 border border-indigo-200/50 dark:border-indigo-900/30 flex justify-between items-center">
+                  <span className="text-slate-500 dark:text-slate-400 font-medium">Belanja Operasi:</span>
                   <span className="font-bold text-indigo-600 dark:text-indigo-400">{realisasiApbd.belanja.operasi}</span>
                 </div>
               </div>

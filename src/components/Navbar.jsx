@@ -19,7 +19,8 @@ export default function Navbar({
   setActiveYear, 
   onOpenAiCopilot,
   toggleSidebar,
-  sidebarOpen
+  sidebarOpen,
+  onGoHome
 }) {
   const [showNotifications, setShowNotifications] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
@@ -45,8 +46,13 @@ export default function Navbar({
             {sidebarOpen ? <X className="w-5 h-5 text-slate-400" /> : <Menu className="w-5 h-5 text-emerald-500 dark:text-emerald-400" />}
           </button>
 
-          <div className="flex items-center gap-3">
-            <div className="relative flex items-center justify-center w-10 h-10 rounded-xl bg-emerald-950/80 border border-emerald-500/30 p-1 shadow-glow-green">
+          <button 
+            onClick={onGoHome}
+            className="flex items-center gap-3 text-left focus:outline-none group rounded-xl p-1 -m-1 hover:bg-zinc-100 dark:hover:bg-slate-800/50 transition cursor-pointer"
+            title="Kembali ke Menu Home"
+            aria-label="Kembali ke Menu Home"
+          >
+            <div className="relative flex items-center justify-center w-10 h-10 rounded-xl bg-emerald-950/80 border border-emerald-500/30 p-1 shadow-glow-green group-hover:scale-105 transition-transform duration-200">
               <img 
                 src={hstInfo.logoUrl} 
                 alt="Logo HST" 
@@ -59,7 +65,7 @@ export default function Navbar({
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <span className="font-extrabold text-base tracking-tight text-zinc-900 dark:text-white font-sans">
+                <span className="font-extrabold text-base tracking-tight text-zinc-900 dark:text-white font-sans group-hover:text-emerald-500 dark:group-hover:text-emerald-400 transition-colors">
                   Dashboard <span className="text-emerald-600 dark:text-emerald-400">HST</span>
                 </span>
                 <span className="hidden sm:inline-block px-2 py-0.5 text-[10px] font-bold rounded-full bg-emerald-500/20 text-emerald-600 dark:text-emerald-300 border border-emerald-500/30">
@@ -70,7 +76,7 @@ export default function Navbar({
                 Kabupaten Hulu Sungai Tengah
               </p>
             </div>
-          </div>
+          </button>
         </div>
 
         {/* Middle: Global Search */}

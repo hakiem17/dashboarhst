@@ -823,9 +823,9 @@ export const misiBupatiData = [
   {
     id: 1,
     misiNo: "MISI 1",
-    judul: "Sosial, SDM & Berbudaya",
-    subJudul: "Masyarakat Adaptif, Berdaya Saing & Quality of Life",
-    tujuan: "Meningkatkan kehidupan sosial masyarakat yang adaptif, berdaya saing, religius & berbudaya.",
+    judul: "Mewujudkan perubahan sosial masyarakat menuju masyarakat adaptif, berdaya saing dan berkualitas hidup tinggi yang religius berbudaya.",
+    subJudul: "Mewujudkan perubahan sosial masyarakat menuju masyarakat adaptif, berdaya saing dan berkualitas hidup tinggi yang religius berbudaya.",
+    tujuan: "Meningkatkan kehidupan sosial masyarakat yang adaptif, berdaya saing, religius dan berbudaya.",
     icon: "Users",
     color: "from-blue-600 to-indigo-600",
     borderColor: "border-blue-500/30",
@@ -840,9 +840,9 @@ export const misiBupatiData = [
   {
     id: 2,
     misiNo: "MISI 2",
-    judul: "Ekonomi & Hilirisasi Pertanian",
-    subJudul: "Hilirisasi Pertanian & Pertumbuhan Berkesinambungan",
-    tujuan: "Meningkatkan perekonomian daerah yang berdaya saing dari hulu-hilir pertanian.",
+    judul: "Mewujudkan perubahan perekonomian daerah secara merata dengan pengembangan menyeluruh dari hulu dan hilirisasi pertanian serta sektor potensial pendukung dengan prinsip kerakyatan yang memperhatikan kesinambungan pembangunan.",
+    subJudul: "Mewujudkan perubahan perekonomian daerah secara merata dengan pengembangan menyeluruh dari hulu dan hilirisasi pertanian serta sektor potensial pendukung dengan prinsip kerakyatan yang memperhatikan kesinambungan pembangunan.",
+    tujuan: "Meningkatkan perekonomian daerah yang berdaya saing dan berkesinambungan.",
     icon: "TrendingUp",
     color: "from-emerald-600 to-teal-600",
     borderColor: "border-emerald-500/30",
@@ -857,9 +857,9 @@ export const misiBupatiData = [
   {
     id: 3,
     misiNo: "MISI 3",
-    judul: "Infrastruktur & IKLH Lingkungan",
-    subJudul: "Infrastruktur Merata & Ketahanan Risiko Bencana",
-    tujuan: "Meningkatkan pelayanan infrastruktur merata, IKLH & ketahanan bencana daerah.",
+    judul: "Meningkatkan infrastruktur pelayanan publik yang merata dengan prinsip berkelanjutan dalam mendukung pengembangan sektor potensial perekonomian daerah dan pelayanan masyarakat.",
+    subJudul: "Meningkatkan infrastruktur pelayanan publik yang merata dengan prinsip berkelanjutan dalam mendukung pengembangan sektor potensial perekonomian daerah dan pelayanan masyarakat.",
+    tujuan: "Meningkatkan pelayanan infrastruktur yang merata dan berkelanjutan.",
     icon: "Building2",
     color: "from-amber-600 to-orange-600",
     borderColor: "border-amber-500/30",
@@ -874,9 +874,9 @@ export const misiBupatiData = [
   {
     id: 4,
     misiNo: "MISI 4",
-    judul: "Tata Kelola BerAKHLAK & SPBE",
-    subJudul: "Pemerintahan Profesional, Digital, WTP & SPI",
-    tujuan: "Mewujudkan tata kelola pemerintahan yang profesional, akuntabel & BerAKHLAK.",
+    judul: "Mewujudkan Pemerintahan yang tanggap dan santun dengan tata kelola profesional.",
+    subJudul: "Mewujudkan Pemerintahan yang tanggap dan santun dengan tata kelola profesional.",
+    tujuan: "Meningkatkan tata kelola pemerintahan yang profesional dan \"BerAKHLAK\".",
     icon: "ShieldCheck",
     color: "from-purple-600 to-pink-600",
     borderColor: "border-purple-500/30",
@@ -893,7 +893,7 @@ export const misiBupatiData = [
 // ===== MISI 1: DATA DETAIL INDIKATOR RPJMD =====
 export const misi1DetailData = {
   misiNo: "MISI 1",
-  judul: "Mewujudkan Perubahan Sosial Masyarakat",
+  judul: "Mewujudkan perubahan sosial masyarakat menuju masyarakat adaptif, berdaya saing dan berkualitas hidup tinggi yang religius berbudaya.",
   deskripsi: "Mewujudkan perubahan sosial masyarakat menuju masyarakat adaptif, berdaya saing dan berkualitas hidup tinggi yang religius berbudaya.",
   tujuan: "Meningkatkan kehidupan sosial masyarakat yang adaptif, berdaya saing, religius dan berbudaya.",
   indikatorUtama: [
@@ -1148,7 +1148,7 @@ export const misi1DetailData = {
 // ===== MISI 2: DATA DETAIL INDIKATOR RPJMD =====
 export const misi2DetailData = {
   misiNo: "MISI 2",
-  judul: "Mewujudkan Perubahan Perekonomian Daerah",
+  judul: "Mewujudkan perubahan perekonomian daerah secara merata dengan pengembangan menyeluruh dari hulu dan hilirisasi pertanian serta sektor potensial pendukung dengan prinsip kerakyatan yang memperhatikan kesinambungan pembangunan.",
   deskripsi: "Mewujudkan perubahan perekonomian daerah secara merata dengan pengembangan menyeluruh dari hulu dan hilirisasi pertanian serta sektor potensial pendukung dengan prinsip kerakyatan yang memperhatikan kesinambungan pembangunan.",
   tujuan: "Meningkatkan perekonomian daerah yang berdaya saing dan berkesinambungan.",
   indikatorUtama: [
@@ -1382,7 +1382,7 @@ export const misi2DetailData = {
 // ===== MISI 3: DATA DETAIL INDIKATOR RPJMD =====
 export const misi3DetailData = {
   misiNo: "MISI 3",
-  judul: "Meningkatkan Infrastruktur Pelayanan Publik",
+  judul: "Meningkatkan infrastruktur pelayanan publik yang merata dengan prinsip berkelanjutan dalam mendukung pengembangan sektor potensial perekonomian daerah dan pelayanan masyarakat.",
   deskripsi: "Meningkatkan infrastruktur pelayanan publik yang merata dengan prinsip berkelanjutan dalam mendukung pengembangan sektor potensial perekonomian daerah dan pelayanan masyarakat.",
   tujuan: "Meningkatkan pelayanan infrastruktur yang merata dan berkelanjutan.",
   indikatorUtama: [
@@ -1496,7 +1496,7 @@ export const misi3DetailData = {
 // ===== MISI 4: DATA DETAIL INDIKATOR RPJMD =====
 export const misi4DetailData = {
   misiNo: "MISI 4",
-  judul: "Pemerintahan Tanggap, Santun & Profesional",
+  judul: "Mewujudkan Pemerintahan yang tanggap dan santun dengan tata kelola profesional.",
   deskripsi: "Mewujudkan Pemerintahan yang tanggap dan santun dengan tata kelola profesional.",
   tujuan: "Meningkatkan tata kelola pemerintahan yang profesional dan BerAKHLAK.",
   indikatorUtama: [
