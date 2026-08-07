@@ -167,6 +167,8 @@ export default function HomeView({ onNavigate, onOpenAiCopilot, darkMode }) {
         ))}
       </div>
 
+
+
       {/* ===== ROW 1.5: CAPAIAN 4 MISI UTAMA BUPATI KABUPATEN HULU SUNGAI TENGAH ===== */}
       <div className="flex-shrink-0 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-1.5 w-full">
         {misiBupatiData.map((misi) => (
@@ -328,35 +330,46 @@ export default function HomeView({ onNavigate, onOpenAiCopilot, darkMode }) {
             </div>
           </div>
 
-          {/* Pengaduan Masyarakat */}
-          <div onClick={() => onNavigate('112')} className="flex-1 dashboard-card rounded-xl overflow-hidden flex flex-col min-h-0 cursor-pointer group hover:border-blue-500/50 transition">
-            <div className="flex-shrink-0 bg-gradient-to-r from-blue-900 to-blue-800 px-3 py-1.5">
-              <h3 className="text-[10px] font-bold text-white flex items-center gap-1.5">
-                <MessageSquare className="w-3 h-3" /> PENGADUAN MASYARAKAT
+          {/* Desil Kemiskinan per Kecamatan (DTSEN) */}
+          <div 
+            onClick={() => onNavigate('dtsen-keluarga')}
+            className="flex-1 dashboard-card rounded-xl overflow-hidden flex flex-col min-h-0 cursor-pointer group hover:border-emerald-500/50 transition border border-emerald-500/20"
+          >
+            <div className="flex-shrink-0 bg-gradient-to-r from-emerald-950 via-slate-900 to-teal-950 px-3 py-1.5 flex items-center justify-between border-b border-emerald-500/30">
+              <h3 className="text-[10px] font-extrabold text-white flex items-center gap-1.5 tracking-wider uppercase">
+                <Users className="w-3 h-3 text-emerald-400" /> DESIL KEMISKINAN PER KECAMATAN (DTSEN)
               </h3>
+              <span className="text-[9px] font-bold text-emerald-400 font-mono bg-emerald-500/20 px-2 py-0.5 rounded border border-emerald-500/30">
+                51.707 KK
+              </span>
             </div>
-            <div className="flex-1 p-2 flex flex-col justify-center space-y-1.5 min-h-0">
-              <div className="flex items-center gap-2 p-1.5 rounded-lg bg-blue-50 dark:bg-blue-950/30 border border-blue-100 dark:border-blue-800/50">
-                <div className="p-1 rounded bg-blue-600 text-white"><MessageSquare className="w-3 h-3" /></div>
-                <div>
-                  <p className="text-[8px] text-slate-500 dark:text-slate-400">Total Masuk</p>
-                  <p className="text-base font-extrabold text-blue-900 dark:text-blue-300 leading-none">{pengaduanData.total.toLocaleString('id-ID')}</p>
+            
+            <div className="flex-1 p-1.5 flex flex-col min-h-0 overflow-y-auto space-y-1 custom-scrollbar">
+              {[
+                { name: 'Barabai', d1: 1240, d2: 2150, total: 8420 },
+                { name: 'Hantakan', d1: 1180, d2: 1120, total: 4150 },
+                { name: 'Batu Benawa', d1: 1050, d2: 1480, total: 5320 },
+                { name: 'Haruyan', d1: 990, d2: 1620, total: 6180 },
+                { name: 'Labuan Amas Selatan', d1: 950, d2: 1890, total: 7250 },
+                { name: 'Labuan Amas Utara', d1: 870, d2: 1540, total: 5840 },
+                { name: 'Batang Alai Selatan', d1: 820, d2: 1610, total: 6020 },
+                { name: 'Batang Alai Timur', d1: 780, d2: 890, total: 3110 },
+                { name: 'Batang Alai Utara', d1: 710, d2: 1320, total: 4950 },
+                { name: 'Pandawan', d1: 680, d2: 1950, total: 7610 },
+                { name: 'Limpasu', d1: 420, d2: 780, total: 2857 }
+              ].map((kec) => (
+                <div key={kec.name} className="p-1.5 rounded-lg bg-slate-900/60 hover:bg-slate-800/80 border border-slate-800 flex items-center justify-between text-[9px] transition">
+                  <div className="flex items-center gap-1.5">
+                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 shrink-0" />
+                    <span className="font-bold text-slate-200">{kec.name}</span>
+                  </div>
+                  <div className="flex items-center gap-2 font-mono">
+                    <span className="text-amber-400 font-bold" title="Desil 1 (Sangat Miskin)">D1: {kec.d1.toLocaleString('id-ID')}</span>
+                    <span className="text-cyan-400" title="Desil 2 (Miskin)">D2: {kec.d2.toLocaleString('id-ID')}</span>
+                    <span className="text-slate-400 text-[8px]" title="Total KK">Total: {kec.total.toLocaleString('id-ID')}</span>
+                  </div>
                 </div>
-              </div>
-              <div className="grid grid-cols-3 gap-1 text-[9px] text-center">
-                <div className="p-1 rounded bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-200 dark:border-emerald-800/40">
-                  <span className="block text-[8px] text-emerald-600 font-bold">Selesai</span>
-                  <span className="font-extrabold text-emerald-700 dark:text-emerald-300">{pengaduanData.selesai}</span>
-                </div>
-                <div className="p-1 rounded bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800/40">
-                  <span className="block text-[8px] text-amber-600 font-bold">Proses</span>
-                  <span className="font-extrabold text-amber-700 dark:text-amber-300">{pengaduanData.proses}</span>
-                </div>
-                <div className="p-1 rounded bg-red-50 dark:bg-red-950/30 border border-red-200 dark:border-red-800/40">
-                  <span className="block text-[8px] text-red-600 font-bold">Belum</span>
-                  <span className="font-extrabold text-red-700 dark:text-red-300">{pengaduanData.belumDitindaklanjuti}</span>
-                </div>
-              </div>
+              ))}
             </div>
           </div>
         </div>

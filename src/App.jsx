@@ -56,8 +56,14 @@ export default function App() {
       case 'misi-bupati':
       case 'strategis':
         return <DataStrategisView darkMode={darkMode} />;
+      case 'dtsen-keluarga':
+        return <DtsenView darkMode={darkMode} defaultSubTab="keluarga" />;
+      case 'dtsen-individu':
+        return <DtsenView darkMode={darkMode} defaultSubTab="individu" />;
+      case 'dtsen-analytics':
+        return <DtsenView darkMode={darkMode} defaultSubTab="keluarga" />;
       case 'inpres':
-        return <DtsenView darkMode={darkMode} />;
+        return <DtsenView darkMode={darkMode} defaultSubTab="keluarga" />;
       case 'tpid-harga':
       case 'tpid-inflasi':
         return <TpidView activeSubView={activeTab} darkMode={darkMode} />;

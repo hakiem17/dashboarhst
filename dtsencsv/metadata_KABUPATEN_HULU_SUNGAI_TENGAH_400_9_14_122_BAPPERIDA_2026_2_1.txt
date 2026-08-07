@@ -1,0 +1,9 @@
+METADATA EXPORT
+===========================================
+Set Name : Set Data Anggota Keluarga
+Export Timestamp: 22/04/2026 14.34.55 (UTC+7)
+CSV Filename: KABUPATEN_HULU_SUNGAI_TENGAH_400_9_14_122_BAPPERIDA_2026_2_1
+CSV Total Record: 144307
+Jumlah Field : 46
+Data Version : DTSEN Versi 1 Januari 2026
+===========================================

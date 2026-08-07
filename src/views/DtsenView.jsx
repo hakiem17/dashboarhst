@@ -115,36 +115,70 @@ function TableauEmbed() {
   );
 }
 
-export default function DtsenView() {
+import DtsenAnalyticsView from './DtsenAnalyticsView';
+import { Users, User, LayoutGrid } from 'lucide-react';
+
+export default function DtsenView({ darkMode, defaultSubTab = 'keluarga' }) {
+  const [subTab, setSubTab] = useState(defaultSubTab);
+
+  // Sync subTab if defaultSubTab prop changes (e.g., via sidebar navigation)
+  useEffect(() => {
+    setSubTab(defaultSubTab);
+  }, [defaultSubTab]);
+
   return (
     <div className="space-y-6 pb-12">
       
-      {/* Breadcrumb & Navigation */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+      {/* Top Header & Tab Switcher */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <h2 className="text-xl sm:text-2xl font-extrabold text-zinc-900 dark:text-zinc-100 font-sans tracking-tight">
-            INPRES 8 / DTSEN
+            INPRES 8 / DTSEN Kab. Hulu Sungai Tengah
           </h2>
+          <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+            Analisis Data Micro Sosio Ekonomi (CSV 2026) & Pelaporan Resmi Kemenko PM
+          </p>
         </div>
-        <div className="flex items-center gap-1 text-[11px] text-slate-550 dark:text-slate-400 font-semibold">
-          <span>Dashboard</span>
-          <ChevronRight className="w-3 h-3" />
-          <span>Data Strategis</span>
-          <ChevronRight className="w-3 h-3" />
-          <span className="text-emerald-600 dark:text-emerald-400">INPRES 8 (DTSEN)</span>
+
+        {/* View Switcher Pills */}
+        <div className="flex items-center gap-1.5 bg-slate-200 dark:bg-slate-900 p-1.5 rounded-2xl border border-slate-300 dark:border-slate-800 shrink-0">
+          <button
+            onClick={() => setSubTab('keluarga')}
+            className={`px-3.5 py-2 rounded-xl text-xs font-bold transition flex items-center gap-2 ${
+              subTab === 'keluarga'
+                ? 'bg-emerald-600 text-white shadow-md shadow-emerald-950/40'
+                : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+            }`}
+          >
+            <Users className="w-4 h-4" />
+            <span>Data Keluarga (KK)</span>
+          </button>
+
+          <button
+            onClick={() => setSubTab('individu')}
+            className={`px-3.5 py-2 rounded-xl text-xs font-bold transition flex items-center gap-2 ${
+              subTab === 'individu'
+                ? 'bg-emerald-600 text-white shadow-md shadow-emerald-950/40'
+                : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+            }`}
+          >
+            <User className="w-4 h-4" />
+            <span>Data Individu (NIK)</span>
+          </button>
+
         </div>
       </div>
 
-      {/* Header Info Banner */}
-      <div className="p-4 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-xs text-slate-700 dark:text-slate-350">
-        <p className="leading-relaxed font-semibold">
-          ℹ️ Berikut adalah **Dashboard Intervensi Kemiskinan (DTSEN)** resmi Kabupaten Hulu Sungai Tengah yang terintegrasi secara langsung dari Tableau Kemenko PM.
-        </p>
-      </div>
+      {/* Render selected view */}
+      {subTab === 'keluarga' && (
+        <DtsenAnalyticsView darkMode={darkMode} defaultMode="household" />
+      )}
 
-      {/* Responsive Scaled Tableau Embed */}
-      <TableauEmbed />
-
+      {subTab === 'individu' && (
+        <DtsenAnalyticsView darkMode={darkMode} defaultMode="individual" />
+      )}
     </div>
   );
 }
+
+
