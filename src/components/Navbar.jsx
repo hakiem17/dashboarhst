@@ -8,7 +8,8 @@ import {
   Sparkles, 
   Calendar, 
   Menu, 
-  X
+  X,
+  LogOut
 } from 'lucide-react';
 import { hstInfo } from '../data/mockData';
 
@@ -20,7 +21,9 @@ export default function Navbar({
   onOpenAiCopilot,
   toggleSidebar,
   sidebarOpen,
-  onGoHome
+  onGoHome,
+  currentUser,
+  onLogout
 }) {
   const [showNotifications, setShowNotifications] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
@@ -161,11 +164,20 @@ export default function Navbar({
             )}
           </div>
 
-          {/* User Profile / Login */}
-          <button className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-emerald-600/10 dark:bg-emerald-600/20 hover:bg-emerald-600/20 dark:hover:bg-emerald-600/30 border border-emerald-500/30 dark:border-emerald-500/40 text-emerald-600 dark:text-emerald-300 text-xs font-medium transition">
-            <UserCircle className="w-4 h-4" />
-            <span className="hidden sm:inline">Masuk / Login</span>
-          </button>
+          {/* User + Logout */}
+          <div className="flex items-center gap-1.5">
+            <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-emerald-600/10 dark:bg-emerald-600/20 border border-emerald-500/30 dark:border-emerald-500/40 text-emerald-600 dark:text-emerald-300 text-xs font-medium">
+              <UserCircle className="w-4 h-4" />
+              <span className="hidden sm:inline">{currentUser?.username || 'User'}</span>
+            </div>
+            <button
+              onClick={onLogout}
+              title="Keluar dari sistem"
+              className="p-2 rounded-lg text-slate-500 hover:text-red-400 hover:bg-red-500/10 border border-transparent hover:border-red-500/30 transition"
+            >
+              <LogOut className="w-4 h-4" />
+            </button>
+          </div>
 
         </div>
       </div>

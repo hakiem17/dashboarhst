@@ -19,6 +19,7 @@ import Misi1View from './views/Misi1View';
 import Misi2View from './views/Misi2View';
 import Misi3View from './views/Misi3View';
 import Misi4View from './views/Misi4View';
+import LoginView from './views/LoginView';
 
 export default function App() {
   const [activeTab, setActiveTab] = useState('home');
@@ -26,6 +27,13 @@ export default function App() {
   const [activeYear, setActiveYear] = useState('2026');
   const [isAiOpen, setIsAiOpen] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [currentUser, setCurrentUser] = useState(null);
+
+  const handleLoginSuccess = (user) => {
+    setCurrentUser(user);
+    setIsAuthenticated(true);
+  };
 
   useEffect(() => {
     if (darkMode) {
@@ -88,6 +96,10 @@ export default function App() {
     }
   };
 
+  if (!isAuthenticated) {
+    return <LoginView onLoginSuccess={handleLoginSuccess} />;
+  }
+
   return (
     <div className={`h-screen overflow-hidden ${darkMode ? 'bg-slate-950 text-slate-100' : 'bg-slate-100 text-slate-800'} font-sans flex flex-col`}>
       
@@ -101,6 +113,8 @@ export default function App() {
         toggleSidebar={() => setSidebarOpen(!sidebarOpen)}
         sidebarOpen={sidebarOpen}
         onGoHome={() => setActiveTab('home')}
+        currentUser={currentUser}
+        onLogout={() => { setIsAuthenticated(false); setCurrentUser(null); }}
       />
 
       {/* Main Body Layout */}
