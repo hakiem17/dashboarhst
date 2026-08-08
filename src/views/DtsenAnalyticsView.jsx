@@ -697,85 +697,122 @@ export default function DtsenAnalyticsView({ darkMode, defaultMode = 'household'
       {/* MODE 2: DATA INDIVIDU (NIK) */}
       {mode === 'individual' && (
         <>
+          {/* Executive KPI Cards */}
           {individualStats && (
-            <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-              <div className="p-5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm">
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+              {/* Total NIK */}
+              <div className="p-5 rounded-2xl bg-slate-900 border border-slate-800 shadow-md relative overflow-hidden group hover:border-emerald-500/50 transition">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Total Penduduk (NIK)</p>
-                    <h3 className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white mt-1">
+                    <p className="text-[11px] font-bold text-emerald-400 uppercase tracking-wider">Total Individu (NIK)</p>
+                    <h3 className="text-2xl sm:text-3xl font-extrabold text-white mt-1">
                       {individualStats.totalIndividu.toLocaleString('id-ID')}
                     </h3>
-                    <p className="text-[10px] text-emerald-600 dark:text-emerald-400 font-semibold mt-1">
-                      Terdaftar dalam DTSEN HST
-                    </p>
+                    <div className="flex items-center gap-1.5 mt-2">
+                      <span className="text-[10px] bg-emerald-500/20 text-emerald-300 font-bold px-2 py-0.5 rounded-md">Data DTSEN</span>
+                      <span className="text-[10px] text-slate-400">Kab. HST</span>
+                    </div>
                   </div>
-                  <div className="p-3 rounded-xl bg-emerald-500/10 text-emerald-500">
+                  <div className="p-3 rounded-xl bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
                     <User className="w-6 h-6" />
                   </div>
                 </div>
               </div>
 
-              <div className="p-5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm">
+              {/* Gender Ratio */}
+              <div className="p-5 rounded-2xl bg-slate-900 border border-slate-800 shadow-md relative overflow-hidden group hover:border-blue-500/50 transition">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Penduduk Bekerja</p>
-                    <h3 className="text-2xl sm:text-3xl font-extrabold text-teal-600 dark:text-teal-400 mt-1">
-                      {(individualStats.workData.find(w => w.name === 'Bekerja')?.count || 0).toLocaleString('id-ID')}
+                    <p className="text-[11px] font-bold text-blue-400 uppercase tracking-wider">Laki-laki / Perempuan</p>
+                    <h3 className="text-2xl sm:text-3xl font-extrabold text-blue-400 mt-1">
+                      {(individualStats.genderData.find(g => g.name === 'Laki-laki')?.count || 0).toLocaleString('id-ID')}
                     </h3>
-                    <p className="text-[10px] text-slate-400 font-medium mt-1">
-                      Memiliki kegiatan ekonomi
-                    </p>
+                    <div className="flex items-center gap-1.5 mt-2">
+                      <span className="text-[10px] bg-pink-500/20 text-pink-300 font-bold px-2 py-0.5 rounded-md">
+                        ♀ {(individualStats.genderData.find(g => g.name === 'Perempuan')?.count || 0).toLocaleString('id-ID')}
+                      </span>
+                    </div>
                   </div>
-                  <div className="p-3 rounded-xl bg-teal-500/10 text-teal-500">
-                    <Briefcase className="w-6 h-6" />
+                  <div className="p-3 rounded-xl bg-blue-500/10 text-blue-400 border border-blue-500/20">
+                    <Users className="w-6 h-6" />
                   </div>
                 </div>
               </div>
 
-              <div className="p-5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm">
+              {/* Stunting */}
+              <div className="p-5 rounded-2xl bg-slate-900 border border-slate-800 shadow-md relative overflow-hidden group hover:border-rose-500/50 transition">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Indikasi Stunting</p>
-                    <h3 className="text-2xl sm:text-3xl font-extrabold text-rose-600 dark:text-rose-400 mt-1">
+                    <p className="text-[11px] font-bold text-rose-400 uppercase tracking-wider">Indikasi Stunting</p>
+                    <h3 className="text-2xl sm:text-3xl font-extrabold text-rose-400 mt-1">
                       {individualStats.stuntingCount.toLocaleString('id-ID')}
                     </h3>
-                    <p className="text-[10px] text-rose-500 font-semibold mt-1">
-                      Anak kerdil / stunting terdeteksi
-                    </p>
+                    <div className="flex items-center gap-1.5 mt-2">
+                      <span className="text-[10px] bg-rose-500/20 text-rose-300 font-bold px-2 py-0.5 rounded-md">
+                        {((individualStats.stuntingCount / (individualStats.totalIndividu || 1)) * 100).toFixed(2)}%
+                      </span>
+                      <span className="text-[10px] text-slate-400">dari total NIK</span>
+                    </div>
                   </div>
-                  <div className="p-3 rounded-xl bg-rose-500/10 text-rose-500">
+                  <div className="p-3 rounded-xl bg-rose-500/10 text-rose-400 border border-rose-500/20">
                     <HeartPulse className="w-6 h-6" />
                   </div>
                 </div>
               </div>
 
-              <div className="p-5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm">
+              {/* Bekerja */}
+              <div className="p-5 rounded-2xl bg-slate-900 border border-slate-800 shadow-md relative overflow-hidden group hover:border-teal-500/50 transition">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Penyakit Kronis</p>
-                    <h3 className="text-2xl sm:text-3xl font-extrabold text-purple-600 dark:text-purple-400 mt-1">
-                      {individualStats.diseaseData.reduce((acc, curr) => acc + curr.count, 0).toLocaleString('id-ID')}
+                    <p className="text-[11px] font-bold text-teal-400 uppercase tracking-wider">Penduduk Bekerja</p>
+                    <h3 className="text-2xl sm:text-3xl font-extrabold text-teal-400 mt-1">
+                      {(individualStats.workData.find(w => w.name === 'Bekerja')?.count || 0).toLocaleString('id-ID')}
                     </h3>
-                    <p className="text-[10px] text-slate-400 font-medium mt-1">
-                      Keluhan kesehatan menahun
-                    </p>
+                    <div className="flex items-center gap-1.5 mt-2">
+                      <span className="text-[10px] bg-teal-500/20 text-teal-300 font-bold px-2 py-0.5 rounded-md">
+                        {(((individualStats.workData.find(w => w.name === 'Bekerja')?.count || 0) / (individualStats.totalIndividu || 1)) * 100).toFixed(1)}%
+                      </span>
+                      <span className="text-[10px] text-slate-400">Partisipasi Kerja</span>
+                    </div>
                   </div>
-                  <div className="p-3 rounded-xl bg-purple-500/10 text-purple-500">
-                    <Activity className="w-6 h-6" />
+                  <div className="p-3 rounded-xl bg-teal-500/10 text-teal-400 border border-teal-500/20">
+                    <Briefcase className="w-6 h-6" />
                   </div>
                 </div>
               </div>
             </div>
           )}
 
+          {/* Rekomendasi Kebijakan Banner */}
+          {individualStats && (
+            <div className="p-4 rounded-2xl bg-gradient-to-r from-slate-900 via-violet-950 to-slate-900 border border-violet-500/30 text-xs flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-md">
+              <div className="flex items-center gap-3">
+                <div className="p-2 rounded-xl bg-violet-500/20 text-violet-400 shrink-0">
+                  <Sparkles className="w-5 h-5" />
+                </div>
+                <div>
+                  <h4 className="font-bold text-white text-sm">Rekomendasi Kebijakan</h4>
+                  <p className="text-slate-300 text-xs mt-0.5">
+                    Fokuskan intervensi <strong className="text-rose-400">penurunan stunting</strong> dan peningkatan <strong className="text-teal-400">partisipasi kerja</strong> pada kecamatan dengan kepadatan individu DTSEN tertinggi.
+                  </p>
+                </div>
+              </div>
+              <div className="shrink-0">
+                <span className="px-3 py-1.5 rounded-xl bg-violet-500/20 text-violet-300 border border-violet-500/40 text-[11px] font-bold font-mono">
+                  SDGs Prioritas 2026
+                </span>
+              </div>
+            </div>
+          )}
+
           {/* Individual Sub-Tabs */}
-          <div className="flex flex-wrap items-center gap-2 border-b border-slate-200 dark:border-slate-800 pb-3">
+          <div className="flex flex-wrap items-center gap-2 border-b border-slate-800 pb-3">
             {[
-              { id: 'pekerjaan', label: 'Status Pekerjaan', icon: Briefcase },
-              { id: 'kesehatan', label: 'Kesehatan & Penyakit Kronis', icon: Activity },
-              { id: 'demografi', label: 'Demografi KTP Kecamatan', icon: Users },
-              { id: 'tabel-nik', label: 'Tabel Detail & Pencarian NIK', icon: Search }
+              { id: 'demografi', label: 'Demografi & Gender', icon: Users },
+              { id: 'pekerjaan', label: 'Ketenagakerjaan & Pendidikan', icon: Briefcase },
+              { id: 'kesehatan', label: 'Kesehatan & Gizi', icon: Activity },
+              { id: 'sebaran', label: 'Sebaran Kecamatan', icon: Home },
+              { id: 'tabel-nik', label: 'Tabel Detail NIK', icon: Search }
             ].map(tab => {
               const Icon = tab.icon;
               const isActive = activeTab === tab.id;
@@ -785,8 +822,8 @@ export default function DtsenAnalyticsView({ darkMode, defaultMode = 'household'
                   onClick={() => setActiveTab(tab.id)}
                   className={`px-4 py-2 rounded-xl text-xs font-bold transition flex items-center gap-2 ${
                     isActive
-                      ? 'bg-emerald-600 text-white shadow-md shadow-emerald-950/40'
-                      : 'bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white border border-slate-200 dark:border-slate-800'
+                      ? 'bg-violet-600 text-white shadow-md shadow-violet-950/40'
+                      : 'bg-slate-900 text-slate-400 hover:text-white border border-slate-800'
                   }`}
                 >
                   <Icon className="w-4 h-4" />
@@ -796,83 +833,254 @@ export default function DtsenAnalyticsView({ darkMode, defaultMode = 'household'
             })}
           </div>
 
-          {/* TAB PEKERJAAN */}
-          {activeTab === 'pekerjaan' && individualStats && (
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              <div className="p-5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm">
-                <h4 className="text-xs font-bold text-slate-800 dark:text-slate-100 uppercase tracking-wider mb-3">
-                  Proporsi Status Bekerja Individu
+          {/* TAB 1: DEMOGRAFI & GENDER */}
+          {activeTab === 'demografi' && individualStats && (
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+              {/* Donut Gender */}
+              <div className="p-5 rounded-2xl bg-slate-900 border border-slate-800 shadow-md lg:col-span-1">
+                <h4 className="text-xs font-bold text-slate-100 uppercase tracking-wider mb-4 flex items-center gap-2">
+                  <Users className="w-4 h-4 text-blue-400" /> Distribusi Jenis Kelamin
                 </h4>
-                <div className="h-64 w-full">
+                <div className="h-52">
                   <ResponsiveContainer width="100%" height="100%">
                     <PieChart>
-                      <Pie data={individualStats.workData} cx="50%" cy="50%" outerRadius={85} dataKey="count" label>
-                        {individualStats.workData.map((e, idx) => (
-                          <Cell key={idx} fill={COLORS[idx % COLORS.length]} />
-                        ))}
-                      </Pie>
-                      <Tooltip contentStyle={{ backgroundColor: '#0f172a', fontSize: '11px' }} />
-                    </PieChart>
-                  </ResponsiveContainer>
-                </div>
-              </div>
-
-              <div className="p-5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm">
-                <h4 className="text-xs font-bold text-slate-800 dark:text-slate-100 uppercase tracking-wider mb-3">
-                  Distribusi Jenis Kelamin Kependudukan
-                </h4>
-                <div className="h-64 w-full">
-                  <ResponsiveContainer width="100%" height="100%">
-                    <PieChart>
-                      <Pie data={individualStats.genderData} cx="50%" cy="50%" innerRadius={50} outerRadius={85} dataKey="count" label>
+                      <Pie data={individualStats.genderData} cx="50%" cy="50%" innerRadius={55} outerRadius={80} dataKey="count" label={({ name, percent }) => `${name} ${(percent * 100).toFixed(1)}%`} labelLine={false}>
                         {individualStats.genderData.map((e, idx) => (
                           <Cell key={idx} fill={idx === 0 ? '#3b82f6' : '#ec4899'} />
                         ))}
                       </Pie>
-                      <Tooltip contentStyle={{ backgroundColor: '#0f172a', fontSize: '11px' }} />
+                      <Tooltip contentStyle={{ backgroundColor: '#0f172a', border: '1px solid #334155', fontSize: '11px', borderRadius: '10px' }} />
                     </PieChart>
+                  </ResponsiveContainer>
+                </div>
+                <div className="grid grid-cols-2 gap-2 mt-2">
+                  <div className="p-2 rounded-lg bg-blue-500/10 border border-blue-500/20 text-center">
+                    <p className="text-[9px] text-blue-400 font-bold uppercase">Laki-laki</p>
+                    <p className="text-lg font-extrabold text-blue-300">{(individualStats.genderData.find(g => g.name === 'Laki-laki')?.count || 0).toLocaleString('id-ID')}</p>
+                  </div>
+                  <div className="p-2 rounded-lg bg-pink-500/10 border border-pink-500/20 text-center">
+                    <p className="text-[9px] text-pink-400 font-bold uppercase">Perempuan</p>
+                    <p className="text-lg font-extrabold text-pink-300">{(individualStats.genderData.find(g => g.name === 'Perempuan')?.count || 0).toLocaleString('id-ID')}</p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Status Stunting & Wasting */}
+              <div className="p-5 rounded-2xl bg-slate-900 border border-slate-800 shadow-md lg:col-span-1">
+                <h4 className="text-xs font-bold text-slate-100 uppercase tracking-wider mb-4 flex items-center gap-2">
+                  <HeartPulse className="w-4 h-4 text-rose-400" /> Status Kondisi Gizi
+                </h4>
+                <div className="space-y-3 mt-4">
+                  {[
+                    { label: 'Normal / Tidak Terindikasi', count: individualStats.totalIndividu - individualStats.stuntingCount - individualStats.wastingCount, color: 'bg-emerald-500', textColor: 'text-emerald-400', pct: (((individualStats.totalIndividu - individualStats.stuntingCount - individualStats.wastingCount) / (individualStats.totalIndividu || 1)) * 100).toFixed(1) },
+                    { label: 'Stunting (Kerdil)', count: individualStats.stuntingCount, color: 'bg-rose-500', textColor: 'text-rose-400', pct: ((individualStats.stuntingCount / (individualStats.totalIndividu || 1)) * 100).toFixed(2) },
+                    { label: 'Wasting (Kurus)', count: individualStats.wastingCount, color: 'bg-amber-500', textColor: 'text-amber-400', pct: ((individualStats.wastingCount / (individualStats.totalIndividu || 1)) * 100).toFixed(2) },
+                  ].map((item, i) => (
+                    <div key={i}>
+                      <div className="flex justify-between items-center mb-1">
+                        <span className={`text-[11px] font-bold ${item.textColor}`}>{item.label}</span>
+                        <span className={`text-[11px] font-mono font-bold ${item.textColor}`}>{item.count.toLocaleString('id-ID')} <span className="text-slate-500">({item.pct}%)</span></span>
+                      </div>
+                      <div className="h-2 rounded-full bg-slate-800">
+                        <div className={`h-2 rounded-full ${item.color} transition-all`} style={{ width: `${Math.min(parseFloat(item.pct), 100)}%` }} />
+                      </div>
+                    </div>
+                  ))}
+                </div>
+                <div className="mt-5 p-3 rounded-xl bg-rose-500/10 border border-rose-500/20">
+                  <p className="text-[10px] text-rose-300 font-semibold">⚠️ Target: Penurunan prevalensi stunting menjadi &lt;14% sesuai RPJMN 2025–2029.</p>
+                </div>
+              </div>
+
+              {/* Status Pekerjaan KPI */}
+              <div className="p-5 rounded-2xl bg-slate-900 border border-slate-800 shadow-md lg:col-span-1">
+                <h4 className="text-xs font-bold text-slate-100 uppercase tracking-wider mb-4 flex items-center gap-2">
+                  <Briefcase className="w-4 h-4 text-teal-400" /> Partisipasi Angkatan Kerja
+                </h4>
+                <div className="h-52">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <PieChart>
+                      <Pie data={individualStats.workData} cx="50%" cy="50%" outerRadius={80} dataKey="count" label={({ name, percent }) => `${(percent * 100).toFixed(1)}%`} labelLine={false}>
+                        {individualStats.workData.map((e, idx) => (
+                          <Cell key={idx} fill={idx === 0 ? '#14b8a6' : '#64748b'} />
+                        ))}
+                      </Pie>
+                      <Tooltip contentStyle={{ backgroundColor: '#0f172a', border: '1px solid #334155', fontSize: '11px', borderRadius: '10px' }} />
+                      <Legend wrapperStyle={{ fontSize: '10px' }} />
+                    </PieChart>
+                  </ResponsiveContainer>
+                </div>
+                <div className="p-3 rounded-xl bg-teal-500/10 border border-teal-500/20 mt-2">
+                  <p className="text-[10px] text-teal-300 font-semibold">🎯 Individu tidak bekerja mencakup IRT, pelajar, dan pengangguran.</p>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* TAB 2: KETENAGAKERJAAN & PENDIDIKAN */}
+          {activeTab === 'pekerjaan' && individualStats && (
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+              {/* Status Bekerja Bar */}
+              <div className="p-5 rounded-2xl bg-slate-900 border border-slate-800 shadow-md">
+                <h4 className="text-xs font-bold text-slate-100 uppercase tracking-wider mb-4 flex items-center gap-2">
+                  <Briefcase className="w-4 h-4 text-teal-400" /> Proporsi Status Bekerja
+                </h4>
+                <div className="space-y-4 mt-2">
+                  {individualStats.workData.map((w, i) => {
+                    const pct = ((w.count / (individualStats.totalIndividu || 1)) * 100).toFixed(1);
+                    const colors = ['text-teal-400 bg-teal-500/10 border-teal-500/20', 'text-slate-400 bg-slate-800 border-slate-700'];
+                    const barColors = ['bg-teal-500', 'bg-slate-600'];
+                    return (
+                      <div key={i}>
+                        <div className="flex justify-between items-center mb-1.5">
+                          <div className={`flex items-center gap-2 px-2.5 py-1 rounded-lg border text-[11px] font-bold ${colors[i]}`}>
+                            <span>{w.name}</span>
+                          </div>
+                          <span className="text-sm font-extrabold text-white">{w.count.toLocaleString('id-ID')} <span className="text-xs text-slate-500">({pct}%)</span></span>
+                        </div>
+                        <div className="h-3 rounded-full bg-slate-800">
+                          <div className={`h-3 rounded-full ${barColors[i]} transition-all`} style={{ width: `${pct}%` }} />
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+                <div className="mt-5 grid grid-cols-2 gap-2">
+                  <div className="p-3 rounded-xl bg-teal-500/10 border border-teal-500/20 text-center">
+                    <p className="text-[9px] text-teal-400 font-bold uppercase mb-1">Tingkat Partisipasi</p>
+                    <p className="text-xl font-extrabold text-teal-300">
+                      {(((individualStats.workData.find(w => w.name === 'Bekerja')?.count || 0) / (individualStats.totalIndividu || 1)) * 100).toFixed(1)}%
+                    </p>
+                  </div>
+                  <div className="p-3 rounded-xl bg-rose-500/10 border border-rose-500/20 text-center">
+                    <p className="text-[9px] text-rose-400 font-bold uppercase mb-1">Non-Aktif Ekonomi</p>
+                    <p className="text-xl font-extrabold text-rose-300">
+                      {(((individualStats.workData.find(w => w.name !== 'Bekerja')?.count || 0) / (individualStats.totalIndividu || 1)) * 100).toFixed(1)}%
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Penyakit Kronis Top 10 */}
+              <div className="p-5 rounded-2xl bg-slate-900 border border-slate-800 shadow-md">
+                <h4 className="text-xs font-bold text-slate-100 uppercase tracking-wider mb-4 flex items-center gap-2">
+                  <Activity className="w-4 h-4 text-violet-400" /> Penyakit Kronis Terdeteksi (Top 10)
+                </h4>
+                <div className="h-64">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <BarChart data={individualStats.diseaseData} layout="vertical">
+                      <CartesianGrid strokeDasharray="3 3" opacity={0.1} horizontal={false} />
+                      <XAxis type="number" tick={{ fontSize: 9, fill: '#94a3b8' }} />
+                      <YAxis type="category" dataKey="name" tick={{ fontSize: 9, fill: '#94a3b8' }} width={120} />
+                      <Tooltip contentStyle={{ backgroundColor: '#0f172a', border: '1px solid #334155', fontSize: '11px', borderRadius: '10px' }} />
+                      <Bar dataKey="count" fill="#8b5cf6" radius={[0, 6, 6, 0]} />
+                    </BarChart>
                   </ResponsiveContainer>
                 </div>
               </div>
             </div>
           )}
 
-          {/* TAB KESEHATAN */}
+          {/* TAB 3: KESEHATAN & GIZI */}
           {activeTab === 'kesehatan' && individualStats && (
-            <div className="p-5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm">
-              <h4 className="text-xs font-bold text-slate-800 dark:text-slate-100 uppercase tracking-wider mb-3">
-                Prevalensi Penyakit Kronis / Menahun Terdeteksi (Top 10)
-              </h4>
-              <div className="h-72 w-full">
-                <ResponsiveContainer width="100%" height="100%">
-                  <BarChart data={individualStats.diseaseData}>
-                    <CartesianGrid strokeDasharray="3 3" opacity={0.15} />
-                    <XAxis dataKey="name" tick={{ fontSize: 9 }} interval={0} angle={-20} textAnchor="end" />
-                    <YAxis tick={{ fontSize: 9 }} />
-                    <Tooltip contentStyle={{ backgroundColor: '#0f172a', fontSize: '11px' }} />
-                    <Bar dataKey="count" fill="#8b5cf6" radius={[6, 6, 0, 0]} />
-                  </BarChart>
-                </ResponsiveContainer>
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+              {/* Penyakit Kronis Bar Chart */}
+              <div className="p-5 rounded-2xl bg-slate-900 border border-slate-800 shadow-md">
+                <h4 className="text-xs font-bold text-slate-100 uppercase tracking-wider mb-4 flex items-center gap-2">
+                  <Activity className="w-4 h-4 text-violet-400" /> Prevalensi Penyakit Kronis (Top 10)
+                </h4>
+                <div className="h-72">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <BarChart data={individualStats.diseaseData}>
+                      <CartesianGrid strokeDasharray="3 3" opacity={0.1} />
+                      <XAxis dataKey="name" tick={{ fontSize: 8, fill: '#94a3b8' }} interval={0} angle={-30} textAnchor="end" height={60} />
+                      <YAxis tick={{ fontSize: 9, fill: '#94a3b8' }} />
+                      <Tooltip contentStyle={{ backgroundColor: '#0f172a', border: '1px solid #334155', fontSize: '11px', borderRadius: '10px' }} />
+                      <Bar dataKey="count" fill="#8b5cf6" radius={[6, 6, 0, 0]} />
+                    </BarChart>
+                  </ResponsiveContainer>
+                </div>
+              </div>
+
+              {/* Stunting & Wasting Detail */}
+              <div className="p-5 rounded-2xl bg-slate-900 border border-slate-800 shadow-md">
+                <h4 className="text-xs font-bold text-slate-100 uppercase tracking-wider mb-4 flex items-center gap-2">
+                  <HeartPulse className="w-4 h-4 text-rose-400" /> Situasi Gizi Balita
+                </h4>
+                <div className="space-y-4 mt-2">
+                  {[
+                    { label: 'Stunting (Kerdil)', desc: 'Tinggi badan di bawah -2 SD', count: individualStats.stuntingCount, pct: ((individualStats.stuntingCount / (individualStats.totalIndividu || 1)) * 100).toFixed(2), color: 'rose' },
+                    { label: 'Wasting (Kurus)', desc: 'Berat badan di bawah -2 SD', count: individualStats.wastingCount, pct: ((individualStats.wastingCount / (individualStats.totalIndividu || 1)) * 100).toFixed(2), color: 'amber' },
+                    { label: 'Normal / Sehat', desc: 'Status gizi baik', count: individualStats.totalIndividu - individualStats.stuntingCount - individualStats.wastingCount, pct: (((individualStats.totalIndividu - individualStats.stuntingCount - individualStats.wastingCount) / (individualStats.totalIndividu || 1)) * 100).toFixed(1), color: 'emerald' },
+                  ].map((item, i) => (
+                    <div key={i} className={`p-4 rounded-xl bg-${item.color}-500/10 border border-${item.color}-500/20`}>
+                      <div className="flex justify-between items-start">
+                        <div>
+                          <p className={`text-sm font-extrabold text-${item.color}-400`}>{item.label}</p>
+                          <p className="text-[10px] text-slate-400 mt-0.5">{item.desc}</p>
+                        </div>
+                        <div className="text-right">
+                          <p className={`text-2xl font-extrabold text-${item.color}-300`}>{item.count.toLocaleString('id-ID')}</p>
+                          <p className={`text-[10px] font-bold text-${item.color}-400`}>{item.pct}%</p>
+                        </div>
+                      </div>
+                      <div className="h-1.5 rounded-full bg-slate-800 mt-3">
+                        <div className={`h-1.5 rounded-full bg-${item.color}-500`} style={{ width: `${Math.min(parseFloat(item.pct), 100)}%` }} />
+                      </div>
+                    </div>
+                  ))}
+                </div>
               </div>
             </div>
           )}
 
-          {/* TAB DEMOGRAFI */}
-          {activeTab === 'demografi' && individualStats && (
-            <div className="p-5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm">
-              <h4 className="text-xs font-bold text-slate-800 dark:text-slate-100 uppercase tracking-wider mb-3">
-                Sebaran Alamat KTP Individu per Kecamatan
-              </h4>
-              <div className="h-72 w-full">
-                <ResponsiveContainer width="100%" height="100%">
-                  <BarChart data={individualStats.kecKtpData}>
-                    <CartesianGrid strokeDasharray="3 3" opacity={0.15} />
-                    <XAxis dataKey="name" tick={{ fontSize: 9 }} interval={0} angle={-25} textAnchor="end" />
-                    <YAxis tick={{ fontSize: 9 }} />
-                    <Tooltip contentStyle={{ backgroundColor: '#0f172a', fontSize: '11px' }} />
-                    <Bar dataKey="count" fill="#10b981" radius={[6, 6, 0, 0]} />
-                  </BarChart>
-                </ResponsiveContainer>
+          {/* TAB 4: SEBARAN KECAMATAN */}
+          {activeTab === 'sebaran' && individualStats && (
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+              {/* Bar Chart sebaran */}
+              <div className="p-5 rounded-2xl bg-slate-900 border border-slate-800 shadow-md">
+                <h4 className="text-xs font-bold text-slate-100 uppercase tracking-wider mb-4 flex items-center gap-2">
+                  <Home className="w-4 h-4 text-emerald-400" /> Jumlah Individu per Kecamatan (KTP)
+                </h4>
+                <div className="h-72">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <BarChart data={[...individualStats.kecKtpData].sort((a, b) => b.count - a.count)}>
+                      <CartesianGrid strokeDasharray="3 3" opacity={0.1} />
+                      <XAxis dataKey="name" tick={{ fontSize: 8, fill: '#94a3b8' }} interval={0} angle={-30} textAnchor="end" height={65} />
+                      <YAxis tick={{ fontSize: 9, fill: '#94a3b8' }} />
+                      <Tooltip contentStyle={{ backgroundColor: '#0f172a', border: '1px solid #334155', fontSize: '11px', borderRadius: '10px' }} />
+                      <Bar dataKey="count" fill="#10b981" radius={[6, 6, 0, 0]} />
+                    </BarChart>
+                  </ResponsiveContainer>
+                </div>
+              </div>
+
+              {/* Ranking List */}
+              <div className="p-5 rounded-2xl bg-slate-900 border border-slate-800 shadow-md">
+                <h4 className="text-xs font-bold text-slate-100 uppercase tracking-wider mb-4 flex items-center gap-2">
+                  <Layers className="w-4 h-4 text-cyan-400" /> Peringkat Kecamatan (Jumlah Individu DTSEN)
+                </h4>
+                <div className="space-y-2 overflow-y-auto max-h-72">
+                  {[...individualStats.kecKtpData]
+                    .sort((a, b) => b.count - a.count)
+                    .map((kec, i) => {
+                      const maxCount = Math.max(...individualStats.kecKtpData.map(k => k.count));
+                      const pct = ((kec.count / maxCount) * 100).toFixed(0);
+                      const rankColors = ['text-amber-400', 'text-slate-300', 'text-amber-600'];
+                      return (
+                        <div key={kec.name} className="flex items-center gap-3 p-2 rounded-xl bg-slate-800/60 border border-slate-700/50 hover:border-emerald-500/30 transition">
+                          <span className={`text-xs font-extrabold w-6 text-center ${i < 3 ? rankColors[i] : 'text-slate-500'}`}>#{i + 1}</span>
+                          <div className="flex-1 min-w-0">
+                            <p className="text-xs font-bold text-slate-200 truncate">{kec.name}</p>
+                            <div className="h-1.5 rounded-full bg-slate-700 mt-1">
+                              <div className="h-1.5 rounded-full bg-emerald-500 transition-all" style={{ width: `${pct}%` }} />
+                            </div>
+                          </div>
+                          <span className="text-xs font-mono font-bold text-emerald-400 shrink-0">{kec.count.toLocaleString('id-ID')}</span>
+                        </div>
+                      );
+                    })}
+                </div>
               </div>
             </div>
           )}
